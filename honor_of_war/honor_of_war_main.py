@@ -3,6 +3,8 @@ from PyQt5.QtWidgets import (
 )
 
 from honor_of_war.honor_of_war_current import *
+from honor_of_war.honor_of_war_new import *
+from honor_of_war.honore_of_war_stop import *
 
 class HonorScreen(QWidget):
     def __init__(self):
@@ -23,10 +25,10 @@ class HonorScreen(QWidget):
         self.current_button.clicked.connect(lambda: show_current(self, 'Veterans_Current'))
 
         self.new_button = QPushButton('신규자')
-        self.new_button.clicked.connect(self.show_new)
+        self.new_button.clicked.connect(lambda: show_new(self, 'Veterans_New'))
 
         self.stop_button = QPushButton('중지자')
-        self.stop_button.clicked.connect(self.show_stopped)
+        self.stop_button.clicked.connect(lambda: show_stop(self, 'Veterans_Stop'))
 
         button_layout.addWidget(back_button)
         button_layout.addWidget(self.current_button)
@@ -48,28 +50,7 @@ class HonorScreen(QWidget):
     def go_back(self):
         self.parentWidget().setCurrentIndex(0)
 
-    def show_new(self):
-        self.reset_button_styles()
-        self.new_button.setStyleSheet('background-color: lightblue')
-        self.label.setText('참전 명예 수당 지급 신규자')
-        # 데이터 로드 함수 호출 필요 시 추가
-
-    def show_stopped(self):
-        self.reset_button_styles()
-        self.stop_button.setStyleSheet('background-color: lightblue')
-        self.label.setText('참전 명예 수당 지급 중지자')
-        # 데이터 로드 함수 호출 필요 시 추가
-
     def reset_button_styles(self):
         self.current_button.setStyleSheet('')
         self.new_button.setStyleSheet('')
         self.stop_button.setStyleSheet('')
-
-    def load_data(honor_screen, cursor, table):
-        cursor.execute(f'SELECT * FROM {table}')
-        rows = cursor.fetchall()
-        honor_screen.table.setRowCount(len(rows))
-
-        for row_idx, row_data in enumerate(rows):
-            for col_idx, col_data in enumerate(row_data):
-                honor_screen.table.setItem(row_idx, col_idx, QTableWidgetItem(str(col_data)))

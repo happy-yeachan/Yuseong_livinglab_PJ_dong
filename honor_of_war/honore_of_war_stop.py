@@ -1,14 +1,14 @@
 from data_control import *
 
 
-def show_current(screen, table_name):
+def show_stop(screen, table_name):
     screen.reset_button_styles()
-    screen.current_button.setStyleSheet('background-color: lightblue')
-    screen.label.setText('참전 명예 수당 지급자 현황')
-    screen.table.setColumnCount(14)
+    screen.stop_button.setStyleSheet('background-color: lightblue')
+    screen.label.setText('참전 명예 수당 지급 중지자')
+    screen.table.setColumnCount(11)
     screen.table.setHorizontalHeaderLabels([
         'Index', 'Dong', 'Registration_month', 'Veteran', 'Name', 'RRN', 'Address',
-        'Deposit_Type', 'Bank', 'Depositor', 'Account', 'Reason', 'Move_in', 'Note'
+        'Move_in', 'Reason', 'Reason_date', 'Note'
     ])
     rows = get_data(table_name)
 

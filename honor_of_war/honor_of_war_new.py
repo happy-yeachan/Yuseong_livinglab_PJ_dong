@@ -1,10 +1,10 @@
 from data_control import *
 
 
-def show_current(screen, table_name):
+def show_new(screen, table_name):
     screen.reset_button_styles()
-    screen.current_button.setStyleSheet('background-color: lightblue')
-    screen.label.setText('참전 명예 수당 지급자 현황')
+    screen.new_button.setStyleSheet('background-color: lightblue')
+    screen.label.setText('참전 명예 수당 지급 신규자')
     screen.table.setColumnCount(14)
     screen.table.setHorizontalHeaderLabels([
         'Index', 'Dong', 'Registration_month', 'Veteran', 'Name', 'RRN', 'Address',
