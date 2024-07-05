@@ -1,30 +1,8 @@
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QPushButton, QLabel, QHBoxLayout, QTableWidget, QTableWidgetItem
 )
-from PyQt5.QtCore import Qt
-import sqlite3
 
-conn = sqlite3.connect('honor_of_war/honor_of_war_databases/honor_of_war_current.db')
-cursor = conn.cursor()
-
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS Veterans (
-    `Index` INTEGER PRIMARY KEY AUTOINCREMENT,
-    `Dong` TEXT NOT NULL,
-    `Registration_month` TEXT NOT NULL,
-    `Veteran` TEXT NOT NULL UNIQUE,
-    `Name` TEXT NOT NULL,
-    `RRN` TEXT NOT NULL,
-    `Address` TEXT NOT NULL,
-    `Deposit_Type` TEXT NOT NULL,
-    `Bank` TEXT NOT NULL,
-    `Depositor` TEXT NOT NULL,
-    `Account` TEXT NOT NULL,
-    `Reason` TEXT NOT NULL,
-    `Move_in` TEXT NOT NULL,
-    `Note` TEXT
-)
-''')
+from honor_of_war.honor_of_war_new import *
 
 class HonorScreen(QWidget):
     def __init__(self):
@@ -42,7 +20,7 @@ class HonorScreen(QWidget):
         back_button.clicked.connect(self.go_back)
 
         self.current_button = QPushButton('현황')
-        self.current_button.clicked.connect(self.show_current)
+        self.current_button.clicked.connect(lambda: show_current(self, 'Veterans_Current'))
 
         self.new_button = QPushButton('신규자')
         self.new_button.clicked.connect(self.show_new)
@@ -58,28 +36,17 @@ class HonorScreen(QWidget):
         self.label = QLabel()
         self.table = QTableWidget()
 
-        self.show_current()
+        # 초기 화면 설정
+        show_current(self, 'Veterans_Current')
 
         layout.addLayout(button_layout)
         layout.addWidget(self.label)
         layout.addWidget(self.table)
         self.setLayout(layout)
 
-        self.show_current()
 
     def go_back(self):
         self.parentWidget().setCurrentIndex(0)
-
-    def show_current(self):
-        self.reset_button_styles()
-        self.current_button.setStyleSheet('background-color: lightblue')
-        self.label.setText('참전 명예 수당 지급자 현황')
-        self.table.setColumnCount(14)
-        self.table.setHorizontalHeaderLabels([
-            'Index', 'Dong', 'Registration_month', 'Veteran', 'Name', 'RRN', 'Address',
-            'Deposit_Type', 'Bank', 'Depositor', 'Account', 'Reason', 'Move_in', 'Note'
-        ])
-        self.load_data()
 
     def show_new(self):
         self.reset_button_styles()
@@ -98,11 +65,11 @@ class HonorScreen(QWidget):
         self.new_button.setStyleSheet('')
         self.stop_button.setStyleSheet('')
 
-    def load_data(self):
-        cursor.execute('SELECT * FROM Veterans')
+    def load_data(honor_screen, cursor, table):
+        cursor.execute(f'SELECT * FROM {table}')
         rows = cursor.fetchall()
-        self.table.setRowCount(len(rows))
+        honor_screen.table.setRowCount(len(rows))
 
         for row_idx, row_data in enumerate(rows):
             for col_idx, col_data in enumerate(row_data):
-                self.table.setItem(row_idx, col_idx, QTableWidgetItem(str(col_data)))
+                honor_screen.table.setItem(row_idx, col_idx, QTableWidgetItem(str(col_data)))
