@@ -7,11 +7,14 @@ def show_current(screen, table_name):
     screen.label.setText('참전 명예 수당 지급자 현황')
     screen.table.setColumnCount(14)
     screen.table.setHorizontalHeaderLabels([
-        'Index', 'Dong', 'Registration_month', 'Veteran', 'Name', 'RRN', 'Address',
-        'Deposit_Type', 'Bank', 'Depositor', 'Account', 'Reason', 'Move_in', 'Note'
+        'Index', '동', '입력날짜', '보훈번호', '성명', '주민번호', '주소',
+        '입금유형', '은행명', '예금주', '계좌번호', '신규 사유', '전입일', '비고'
     ])
     rows = get_data(table_name)
 
+    # 폼 필드 전환
+    screen.switch_form_fields('current')
+    
     screen.table.setRowCount(len(rows))
 
     for row_idx, row_data in enumerate(rows):
