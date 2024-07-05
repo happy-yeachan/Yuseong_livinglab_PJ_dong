@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QPushButton, QLabel, QHBoxLayout, QTableWidget, QTableWidgetItem
 )
 
-from honor_of_war.honor_of_war_new import *
+from honor_of_war.honor_of_war_current import *
 
 class HonorScreen(QWidget):
     def __init__(self):
