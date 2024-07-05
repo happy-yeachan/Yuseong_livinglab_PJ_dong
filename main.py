@@ -1,6 +1,11 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QStackedWidget, QLabel
+from PyQt5.QtWidgets import (
+    QApplication, QWidget, QVBoxLayout, QPushButton, QStackedWidget, QLabel, QHBoxLayout
+)
 
+from honor_of_war.honor_of_war_main import *
+from veterans_honor.veterans_honor_main import *
+from veterans_spouse.veterans_spouse_main import *
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -11,62 +16,23 @@ class MainWindow(QWidget):
 
         # 버튼 3개 추가
         self.honor_button = QPushButton('참전 명예')
-        self.honor_button.clicked.connect(self.show_honor_screen)
+        self.honor_button.clicked.connect(self.set_screen(1))
         layout.addWidget(self.honor_button)
 
         self.veteran_button = QPushButton('보훈 예우')
-        self.veteran_button.clicked.connect(self.show_veteran_screen)
+        self.veteran_button.clicked.connect(self.set_screen(2))
         layout.addWidget(self.veteran_button)
 
         self.spouse_button = QPushButton('보훈 예우 배우자')
-        self.spouse_button.clicked.connect(self.show_spouse_screen)
+        self.spouse_button.clicked.connect(self.set_screen(3))
         layout.addWidget(self.spouse_button)
 
         self.setLayout(layout)
         self.setWindowTitle('메인 화면')
         self.setGeometry(100, 100, 300, 200)
 
-    def show_honor_screen(self):
-        self.parent().setCurrentIndex(1)
-
-    def show_veteran_screen(self):
-        self.parent().setCurrentIndex(2)
-
-    def show_spouse_screen(self):
-        self.parent().setCurrentIndex(3)
-
-class HonorScreen(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.initUI()
-
-    def initUI(self):
-        layout = QVBoxLayout()
-        label = QLabel('참전 명예 화면')
-        layout.addWidget(label)
-        self.setLayout(layout)
-
-class VeteranScreen(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.initUI()
-
-    def initUI(self):
-        layout = QVBoxLayout()
-        label = QLabel('보훈 예우 화면')
-        layout.addWidget(label)
-        self.setLayout(layout)
-
-class SpouseScreen(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.initUI()
-
-    def initUI(self):
-        layout = QVBoxLayout()
-        label = QLabel('보훈 예우 배우자 화면')
-        layout.addWidget(label)
-        self.setLayout(layout)
+    def set_screen(self, idx):
+        self.parent().setCurrentIndex(idx)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
