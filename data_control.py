@@ -66,3 +66,10 @@ def get_data(table_name):
     cursor.execute(f'SELECT * FROM {table_name}')
     rows = cursor.fetchall()
     return rows
+
+def add_data(table_name, db):
+    cursor.execute(f'''
+        INSERT INTO {table_name} (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, Reason, Move_in, Note)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', db)
+    conn.commit()
