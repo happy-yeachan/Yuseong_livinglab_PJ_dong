@@ -22,13 +22,13 @@ class HonorScreen(QWidget):
         back_button.clicked.connect(self.go_back)
 
         self.current_button = QPushButton('현황')
-        self.current_button.clicked.connect(lambda: show_current(self, 'Veterans_Current'))
+        self.current_button.clicked.connect(lambda: show_current(self))
 
         self.new_button = QPushButton('신규자')
-        self.new_button.clicked.connect(lambda: show_new(self, 'Veterans_New'))
+        self.new_button.clicked.connect(lambda: show_new(self))
 
         self.stop_button = QPushButton('중지자')
-        self.stop_button.clicked.connect(lambda: show_stop(self, 'Veterans_Stop'))
+        self.stop_button.clicked.connect(lambda: show_stop(self))
 
         button_layout.addWidget(back_button)
         button_layout.addWidget(self.current_button)
@@ -55,7 +55,7 @@ class HonorScreen(QWidget):
         layout.addLayout(content_layout)
 
         # 초기 화면 설정
-        show_current(self, 'Veterans_Current')
+        show_current(self)
 
         self.setLayout(layout)
 
@@ -142,8 +142,9 @@ class HonorScreen(QWidget):
         if mode == "new" or mode == "stop":
             # Submit Button
             self.submit_button = QPushButton('추가')
-            # self.submit_button.clicked.connect(self.submit_or_edit_form)
+            self.submit_button.clicked.connect(lambda:submit_or_edit_form_new(self))
             self.form_layout.addRow(self.submit_button)
+
 
         # Spacer Item
         spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
@@ -161,5 +162,6 @@ class HonorScreen(QWidget):
             for col_idx, col_data in enumerate(row_data):
                 self.table.setItem(row_idx, col_idx, QTableWidgetItem(str(col_data)))
         self.table.resizeColumnsToContents()  # 자동으로 모든 열의 너비를 조정하여 내용을 맞춤
-        self.table.setMinimumWidth(1000) 
+        self.table.setMinimumWidth(1500) 
         self.table.setSizeAdjustPolicy(QTableWidget.AdjustToContents) 
+    
