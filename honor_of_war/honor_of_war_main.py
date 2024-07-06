@@ -56,9 +56,6 @@ class HonorScreen(QWidget):
 
         # 초기 화면 설정
         show_current(self, 'Veterans_Current')
-        self.table.resizeColumnsToContents()  # 자동으로 모든 열의 너비를 조정하여 내용을 맞춤
-        self.table.setMinimumWidth(1000) 
-        self.table.setSizeAdjustPolicy(QTableWidget.AdjustToContents)  # 내용에 맞춰 테이블 크기 조정
 
         self.setLayout(layout)
 
@@ -204,3 +201,13 @@ class HonorScreen(QWidget):
         # self.export_button.clicked.connect(self.export_to_excel)
         self.form_layout.addRow(self.export_button)
     
+    def load_data(self, rows, type):
+        self.table.setRowCount(len(rows))
+        # 폼 필드 전환
+        self.switch_form_fields(f'{type}')
+        for row_idx, row_data in enumerate(rows):
+            for col_idx, col_data in enumerate(row_data):
+                self.table.setItem(row_idx, col_idx, QTableWidgetItem(str(col_data)))
+        self.table.resizeColumnsToContents()  # 자동으로 모든 열의 너비를 조정하여 내용을 맞춤
+        self.table.setMinimumWidth(1000) 
+        self.table.setSizeAdjustPolicy(QTableWidget.AdjustToContents) 
