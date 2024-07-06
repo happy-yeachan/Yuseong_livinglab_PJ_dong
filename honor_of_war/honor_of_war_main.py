@@ -45,7 +45,7 @@ class HonorScreen(QWidget):
 
         # 폼 레이아웃 추가
         self.form_layout = QFormLayout()
-        self.add_form_fields()
+        self.add_form_fields('now')
 
          # 테이블과 폼을 가로로 나란히 배치할 레이아웃
         content_layout = QHBoxLayout()
@@ -72,60 +72,11 @@ class HonorScreen(QWidget):
         for i in reversed(range(self.form_layout.rowCount())):
             self.form_layout.removeRow(i)
         
-        if mode == 'stop':
-            # 중지자 폼 필드 추가
-            self.dong_name = QLineEdit()
-            self.form_layout.addRow('동명', self.dong_name)
-
-            self.input_date = QLineEdit()
-            self.input_date.setPlaceholderText('YYYYMMDD 형식으로 입력하세요 (예: 19990721)')
-            self.form_layout.addRow('입력날짜', self.input_date)
-
-            self.honor_number = QLineEdit()
-            self.form_layout.addRow('보훈번호', self.honor_number)
-
-            self.name = QLineEdit()
-            self.form_layout.addRow('성명', self.name)
-
-            self.resident_number = QLineEdit()
-            self.form_layout.addRow('주민번호', self.resident_number)
-
-            self.address = QLineEdit()
-            self.form_layout.addRow('주소', self.address)
-
-            self.transfer_date = QLineEdit()
-            self.transfer_date.setPlaceholderText('YYYYMMDD 형식으로 입력하세요 (예: 19990721)')
-            self.form_layout.addRow('전입일', self.transfer_date)
-
-            self.stop_reason = QLineEdit()
-            self.form_layout.addRow('중단사유', self.stop_reason)
-
-            self.stop_date = QLineEdit()
-            self.stop_date.setPlaceholderText('YYYYMMDD 형식으로 입력하세요 (예: 19990721)')
-            self.form_layout.addRow('사유일시', self.stop_date)
-
-            self.notes = QTextEdit()
-            self.notes.setPlaceholderText('자유롭게 입력하세요')
-            self.notes.setFixedHeight(100)
-            self.form_layout.addRow('비고', self.notes)
-
-            # Submit Button
-            self.submit_button = QPushButton('삭제')
-            # self.submit_button.clicked.connect(self.submit_or_edit_form)
-            self.form_layout.addRow(self.submit_button)
-
-            # Spacer Item
-            spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-            self.form_layout.addItem(spacer)
-
-            self.export_button = QPushButton('엑셀 추출하기')
-            # self.export_button.clicked.connect(self.export_to_excel)
-            self.form_layout.addRow(self.export_button)
         else:
             # 기존 폼 필드 복원
-            self.add_form_fields()
+            self.add_form_fields(mode)
 
-    def add_form_fields(self):
+    def add_form_fields(self, mode):
         # 동명
         self.dong_name = QLineEdit()
         self.form_layout.addRow('동명', self.dong_name)
@@ -188,10 +139,11 @@ class HonorScreen(QWidget):
         self.notes.setFixedHeight(100)
         self.form_layout.addRow('비고', self.notes)
 
-        # Submit Button
-        self.submit_button = QPushButton('추가')
-        # self.submit_button.clicked.connect(self.submit_or_edit_form)
-        self.form_layout.addRow(self.submit_button)
+        if mode == "new" or mode == "stop":
+            # Submit Button
+            self.submit_button = QPushButton('추가')
+            # self.submit_button.clicked.connect(self.submit_or_edit_form)
+            self.form_layout.addRow(self.submit_button)
 
         # Spacer Item
         spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
