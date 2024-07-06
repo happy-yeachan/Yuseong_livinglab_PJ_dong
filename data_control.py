@@ -67,10 +67,14 @@ def get_data(table_name):
     rows = cursor.fetchall()
     return rows
 
-def add_data(table_name, db):
+def add_data_veterans(table_name, db):
     try:
         cursor.execute(f'''
-            INSERT INTO {table_name} (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, Reason, Move_in, Note)
+            INSERT INTO {table_name}_New (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, Reason, Move_in, Note)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', db)
+        cursor.execute(f'''
+            INSERT INTO {table_name}_Current (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, Reason, Move_in, Note)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', db)
         conn.commit()

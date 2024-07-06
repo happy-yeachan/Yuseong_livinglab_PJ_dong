@@ -22,7 +22,7 @@ def submit_or_edit_form_new(screen):
 
 def submit_form(screen):
 
-    add_data('Veterans_New', (
+    add_data_veterans('Veterans', (
             screen.dong_name.text(),
             datetime.datetime.now().strftime("%Y.%m.%d"),  # 현재 월을 예로 추가 (혹은 필요 시 변경 가능)
             screen.honor_number.text(),
