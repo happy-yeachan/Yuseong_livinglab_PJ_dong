@@ -30,7 +30,6 @@ class MainWindow(QWidget):
 
         self.setLayout(layout)
         self.setWindowTitle('메인 화면')
-        self.setGeometry(100, 100, 300, 200)
 
     def set_screen(self, idx):
         self.parentWidget().setCurrentIndex(idx)
@@ -49,8 +48,6 @@ if __name__ == '__main__':
     stacked_widget.addWidget(veteran_screen)
     stacked_widget.addWidget(spouse_screen)
 
-    stacked_widget.setFixedWidth(400)
-    stacked_widget.setFixedHeight(300)
     stacked_widget.show()
 
     sys.exit(app.exec_())
