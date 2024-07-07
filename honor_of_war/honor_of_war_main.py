@@ -21,19 +21,19 @@ class HonorScreen(QWidget):
         back_button = QPushButton('이전')
         back_button.clicked.connect(self.go_back)
 
-        self.current_button = QPushButton('현황')
-        self.current_button.clicked.connect(lambda: show_current(self))
-
         self.new_button = QPushButton('신규자')
         self.new_button.clicked.connect(lambda: show_new(self))
 
         self.stop_button = QPushButton('중지자')
         self.stop_button.clicked.connect(lambda: show_stop(self))
 
+        self.current_button = QPushButton('현황')
+        self.current_button.clicked.connect(lambda: show_current(self))
+
         button_layout.addWidget(back_button)
-        button_layout.addWidget(self.current_button)
         button_layout.addWidget(self.new_button)
         button_layout.addWidget(self.stop_button)
+        button_layout.addWidget(self.current_button)
 
         self.label = QLabel()
         self.table = QTableWidget()
@@ -72,9 +72,59 @@ class HonorScreen(QWidget):
         for i in reversed(range(self.form_layout.rowCount())):
             self.form_layout.removeRow(i)
         
-        else:
+        if mode == 'stop':
+            # 중지자 폼 필드 추가
+            self.dong_name = QLineEdit()
+            self.form_layout.addRow('동명', self.dong_name)
+
+            self.input_date = QLineEdit()
+            self.input_date.setPlaceholderText('YYYYMMDD 형식으로 입력하세요 (예: 19990721)')
+            self.form_layout.addRow('입력날짜', self.input_date)
+
+            self.honor_number = QLineEdit()
+            self.form_layout.addRow('보훈번호', self.honor_number)
+
+            self.name = QLineEdit()
+            self.form_layout.addRow('성명', self.name)
+
+            self.resident_number = QLineEdit()
+            self.form_layout.addRow('주민번호', self.resident_number)
+
+            self.address = QLineEdit()
+            self.form_layout.addRow('주소', self.address)
+
+            self.transfer_date = QLineEdit()
+            self.transfer_date.setPlaceholderText('YYYYMMDD 형식으로 입력하세요 (예: 19990721)')
+            self.form_layout.addRow('전입일', self.transfer_date)
+
+            self.stop_reason = QLineEdit()
+            self.form_layout.addRow('중단사유', self.stop_reason)
+
+            self.stop_date = QLineEdit()
+            self.stop_date.setPlaceholderText('YYYYMMDD 형식으로 입력하세요 (예: 19990721)')
+            self.form_layout.addRow('사유일시', self.stop_date)
+
+            self.notes = QTextEdit()
+            self.notes.setPlaceholderText('자유롭게 입력하세요')
+            self.notes.setFixedHeight(100)
+            self.form_layout.addRow('비고', self.notes)
+
+            # Submit Button
+            self.submit_button = QPushButton('삭제')
+            # self.submit_button.clicked.connect(self.submit_or_edit_form)
+            self.form_layout.addRow(self.submit_button)
+
+            # Spacer Item
+            spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+            self.form_layout.addItem(spacer)
+
+        elif mode == "new":
             # 기존 폼 필드 복원
             self.add_form_fields(mode)
+
+        self.export_button = QPushButton('엑셀 추출하기')
+            # self.export_button.clicked.connect(self.export_to_excel)
+        self.form_layout.addRow(self.export_button)
 
     def add_form_fields(self, mode):
         # 동명
@@ -139,20 +189,69 @@ class HonorScreen(QWidget):
         self.notes.setFixedHeight(100)
         self.form_layout.addRow('비고', self.notes)
 
-        if mode == "new" or mode == "stop":
+        # Button Layout
+        self.button_layout = QHBoxLayout()
+
+
+        if mode == "new":
+            # Submit Button
+            self.submit_button = QPushButton('추가')
+            self.submit_button.clicked.connect(lambda:submit_or_edit_form_new(self))
+            self.button_layout.addWidget(self.submit_button)
+
+            # Edit Button
+            self.edit_button = QPushButton('수정')
+            # self.edit_button.clicked.connect(lambda: self.submit_or_edit_form_new('edit'))
+            self.edit_button.setVisible(False)
+            self.button_layout.addWidget(self.edit_button)
+            
+            # Delete Button
+            self.delete_button = QPushButton('삭제')
+            # self.delete_button.clicked.connect(lambda: self.submit_or_edit_form_new('delete'))
+            self.delete_button.setVisible(False)
+            self.button_layout.addWidget(self.delete_button)
+
+            # cancel Button
+            self.cancel_button = QPushButton('취소')
+            # self.delete_button.clicked.connect(lambda: self.submit_or_edit_form_new('delete'))
+            self.cancel_button.setVisible(False)
+            self.button_layout.addWidget(self.cancel_button)
+            
+            self.form_layout.addRow(self.button_layout)
+            
+            # # Set layout for the widget
+            # self.setLayout(self.form_layout)
+
+        elif mode == "stop":
+
             # Submit Button
             self.submit_button = QPushButton('추가')
             self.submit_button.clicked.connect(lambda:submit_or_edit_form_new(self))
             self.form_layout.addRow(self.submit_button)
 
+            # Edit Button
+            self.edit_button = QPushButton('수정')
+            # self.edit_button.clicked.connect(lambda: self.submit_or_edit_form_new('edit'))
+            self.edit_button.setVisible(False)
+            self.button_layout.addWidget(self.edit_button)
+            
+            # Delete Button
+            self.delete_button = QPushButton('삭제')
+            # self.delete_button.clicked.connect(lambda: self.submit_or_edit_form_new('delete'))
+            self.delete_button.setVisible(False)
+            self.button_layout.addWidget(self.delete_button)
+
+            # cancel Button
+            self.cancel_button = QPushButton('취소')
+            # self.delete_button.clicked.connect(lambda: self.submit_or_edit_form_new('delete'))
+            self.cancel_button.setVisible(False)
+            self.button_layout.addWidget(self.cancel_button)
+            
+            self.form_layout.addRow(self.button_layout)
 
         # Spacer Item
         spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.form_layout.addItem(spacer)
-
-        self.export_button = QPushButton('엑셀 추출하기')
-        # self.export_button.clicked.connect(self.export_to_excel)
-        self.form_layout.addRow(self.export_button)
     
     def load_data(self, rows, type):
         self.table.setRowCount(len(rows))
@@ -164,4 +263,10 @@ class HonorScreen(QWidget):
         self.table.resizeColumnsToContents()  # 자동으로 모든 열의 너비를 조정하여 내용을 맞춤
         self.table.setMinimumWidth(1000) 
         self.table.setSizeAdjustPolicy(QTableWidget.AdjustToContents) 
-    
+        self.table.horizontalHeader().setStretchLastSection(True)
+        try:
+            self.table.cellClicked.disconnect()  # 기존 연결 해제
+        except TypeError:
+            pass  # 연결이 없으면 무시
+        if type == "new":
+            self.table.cellClicked.connect(lambda row, column: load_selected_data(self, row, column))
