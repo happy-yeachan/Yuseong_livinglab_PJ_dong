@@ -162,6 +162,6 @@ class HonorScreen(QWidget):
             for col_idx, col_data in enumerate(row_data):
                 self.table.setItem(row_idx, col_idx, QTableWidgetItem(str(col_data)))
         self.table.resizeColumnsToContents()  # 자동으로 모든 열의 너비를 조정하여 내용을 맞춤
-        self.table.setMinimumWidth(1500) 
+        self.table.setMinimumWidth(1000) 
         self.table.setSizeAdjustPolicy(QTableWidget.AdjustToContents) 
     
