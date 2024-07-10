@@ -207,13 +207,13 @@ class HonorScreen(QWidget):
             
             # Delete Button
             self.delete_button = QPushButton('삭제')
-            # self.delete_button.clicked.connect(lambda: self.submit_or_edit_form_new('delete'))
+            self.delete_button.clicked.connect(lambda:new_delete(self))
             self.delete_button.setVisible(False)
             self.button_layout.addWidget(self.delete_button)
 
             # cancel Button
             self.cancel_button = QPushButton('취소')
-            self.cancel_button.clicked.connect(lambda:edit_cancel(self))
+            self.cancel_button.clicked.connect(lambda:new_cancel(self))
             self.cancel_button.setVisible(False)
             self.button_layout.addWidget(self.cancel_button)
             
