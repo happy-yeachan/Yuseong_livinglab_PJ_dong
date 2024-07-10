@@ -8,10 +8,9 @@ cursor = conn.cursor()
 # 테이블 생성
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS Veterans_Current (
-    `Index` INTEGER PRIMARY KEY AUTOINCREMENT,
     `Dong` TEXT NOT NULL,
     `Registration_month` TEXT NOT NULL,
-    `Veteran` TEXT NOT NULL UNIQUE,
+    `Veteran` TEXT NOT NULL PRIMARY KEY,
     `Name` TEXT NOT NULL,
     `RRN` TEXT NOT NULL,
     `Address` TEXT NOT NULL,
@@ -27,10 +26,9 @@ CREATE TABLE IF NOT EXISTS Veterans_Current (
 
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS Veterans_New (
-    `Index` INTEGER PRIMARY KEY AUTOINCREMENT,
     `Dong` TEXT NOT NULL,
     `Registration_month` TEXT NOT NULL,
-    `Veteran` TEXT NOT NULL UNIQUE,
+    `Veteran` TEXT NOT NULL PRIMARY KEY,
     `Name` TEXT NOT NULL,
     `RRN` TEXT NOT NULL,
     `Address` TEXT NOT NULL,
@@ -46,10 +44,9 @@ CREATE TABLE IF NOT EXISTS Veterans_New (
 
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS Veterans_Stop (
-    `Index` INTEGER PRIMARY KEY AUTOINCREMENT,
     `Dong` TEXT NOT NULL,
     `Registration_month` TEXT NOT NULL,
-    `Veteran` TEXT NOT NULL UNIQUE,
+    `Veteran` TEXT NOT NULL PRIMARY KEY,
     `Name` TEXT NOT NULL,
     `RRN` TEXT NOT NULL,
     `Address` TEXT NOT NULL,
@@ -80,3 +77,11 @@ def add_data_veterans(table_name, db):
         conn.commit()
     except sqlite3.IntegrityError:
         print("Error: Duplicate Veteran entry")
+
+def delete_data_veterans(table_name, honor_number):
+    try:
+        cursor.execute(f'DELETE FROM {table_name}_New WHERE Veteran = ?', (honor_number,))
+        cursor.execute(f'DELETE FROM {table_name}_Current WHERE Veteran = ?', (honor_number,))
+        conn.commit()
+    except sqlite3.Error as e:
+        print(f"An error occurred: {e}")
