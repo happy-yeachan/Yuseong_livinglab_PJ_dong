@@ -201,7 +201,7 @@ class HonorScreen(QWidget):
 
             # Edit Button
             self.edit_button = QPushButton('수정')
-            # self.edit_button.clicked.connect(lambda: self.submit_or_edit_form_new('edit'))
+            self.edit_button.clicked.connect(lambda: new_update(self))
             self.edit_button.setVisible(False)
             self.button_layout.addWidget(self.edit_button)
             

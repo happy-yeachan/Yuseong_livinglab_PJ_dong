@@ -141,3 +141,16 @@ def new_delete(screen):
         rows = get_data("Veterans_New")
         screen.load_data(rows, 'new')
         
+def new_update(screen):
+    # 사용자에게 수정할 것인지 확인하는 메시지 박스 생성
+    reply = QMessageBox.question(
+        screen, 
+        '수정 취소', 
+        '정말로 수정하시겠습니까?', 
+        QMessageBox.Yes | QMessageBox.No, 
+        QMessageBox.Yes
+    )
+    if reply == QMessageBox.Yes:
+        update_data_veterans('Veterans',  screen.honor_number.text(), get_form_data(screen))
+        rows = get_data("Veterans_New")
+        screen.load_data(rows, 'new')

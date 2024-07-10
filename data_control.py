@@ -85,3 +85,21 @@ def delete_data_veterans(table_name, honor_number):
         conn.commit()
     except sqlite3.Error as e:
         print(f"An error occurred: {e}")
+
+def update_data_veterans(table_name, honor_name, db):
+    try:
+        cursor.execute(f'''
+            UPDATE {table_name}_New
+            SET Dong = ?, Registration_month = ?, Veteran = ?, Name = ?, RRN = ?, Address = ?, Deposit_Type = ?, Bank = ?, Depositor = ?, Account = ?, Reason = ?, Move_in = ?, Note = ?
+            WHERE Veteran = ?
+        ''', (*db, honor_name))
+        
+        cursor.execute(f'''
+            UPDATE {table_name}_Current
+            SET Dong = ?, Registration_month = ?, Veteran = ?, Name = ?, RRN = ?, Address = ?, Deposit_Type = ?, Bank = ?, Depositor = ?, Account = ?, Reason = ?, Move_in = ?, Note = ?
+            WHERE Veteran = ?
+        ''', (*db, honor_name))
+        
+        conn.commit()
+    except sqlite3.Error as e:
+        print(f"An error occurred: {e}")
