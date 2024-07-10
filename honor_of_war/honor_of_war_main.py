@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (
 
 from honor_of_war.honor_of_war_current import *
 from honor_of_war.honor_of_war_new import *
-from honor_of_war.honore_of_war_stop import *
+from honor_of_war.honor_of_war_stop import *
 
 class HonorScreen(QWidget):
     def __init__(self):
