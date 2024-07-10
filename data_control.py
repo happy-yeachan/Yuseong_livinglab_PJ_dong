@@ -67,7 +67,7 @@ def get_data(table_name):
     rows = cursor.fetchall()
     return rows
 
-def add_veterans(table_name, db):
+def add_new_veterans(table_name, db):
     try:
         cursor.execute(f'''
             INSERT INTO {table_name}_New (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, Reason, Move_in, Note)
@@ -81,7 +81,7 @@ def add_veterans(table_name, db):
     except sqlite3.IntegrityError:
         print("Error: Duplicate Veteran entry")
 
-def delete_veterans(table_name, honor_number):
+def delete_new_veterans(table_name, honor_number):
     try:
         cursor.execute(f'DELETE FROM {table_name}_New WHERE Veteran = ?', (honor_number,))
         cursor.execute(f'DELETE FROM {table_name}_Current WHERE Veteran = ?', (honor_number,))
@@ -89,7 +89,7 @@ def delete_veterans(table_name, honor_number):
     except sqlite3.Error as e:
         print(f"An error occurred: {e}")
 
-def update_veterans(table_name, honor_name, db):
+def update_new_veterans(table_name, honor_name, db):
     try:
         cursor.execute(f'''
             UPDATE {table_name}_New

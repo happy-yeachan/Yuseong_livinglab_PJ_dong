@@ -19,7 +19,7 @@ def configure_new_table(screen):
 
 def new_submit_form(screen):
     if new_validate_form(screen):
-        add_veterans('Veterans', new_get_form_data(screen))
+        add_new_veterans('Veterans', new_get_form_data(screen))
         rows = get_data("Veterans_New")
         screen.load_data(rows, 'new')
         show_message("데이터가 성공적으로 추가되었습니다.")
@@ -151,6 +151,6 @@ def new_update(screen):
         QMessageBox.Yes
     )
     if reply == QMessageBox.Yes:
-        update_veterans('Veterans',  screen.honor_number.text(), new_get_form_data(screen))
+        update_new_veterans('Veterans',  screen.honor_number.text(), new_get_form_data(screen))
         rows = get_data("Veterans_New")
         screen.load_data(rows, 'new')
