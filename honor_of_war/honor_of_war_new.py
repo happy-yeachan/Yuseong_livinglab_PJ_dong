@@ -17,16 +17,16 @@ def configure_new_table(screen):
         '입금유형', '은행명', '예금주', '계좌번호', '신규 사유', '전입일', '비고'
     ])
 
-def submit_form(screen):
-    if validate_form(screen):
-        add_data_veterans('Veterans', get_form_data(screen))
+def new_submit_form(screen):
+    if new_validate_form(screen):
+        add_veterans('Veterans', new_get_form_data(screen))
         rows = get_data("Veterans_New")
         screen.load_data(rows, 'new')
         show_message("데이터가 성공적으로 추가되었습니다.")
     else:
         show_message("모든 필드를 정확히 입력하세요.")
 
-def get_form_data(screen):
+def new_get_form_data(screen):
     return (
         screen.dong_name.text(),
         datetime.datetime.now().strftime("%Y.%m.%d"),  # 현재 날짜
@@ -43,7 +43,7 @@ def get_form_data(screen):
         screen.notes.toPlainText()
     )
 
-def validate_form(screen):
+def new_validate_form(screen):
     # 데이터 확인 코드 추가 예정
     return all([
         screen.dong_name.text(),
@@ -64,7 +64,7 @@ def validate_form(screen):
 def show_message(message):
     QMessageBox.information(None, '정보', message)
 
-def load_selected_data(screen, row, column):
+def new_load_selected_data(screen, row, column):
     screen.selected_row = row
     set_form_fields_from_table(screen, row)
     configure_buttons_for_edit(screen)
@@ -90,10 +90,10 @@ def set_form_fields_from_table(screen, row):
         screen.notes.setPlainText(screen.table.item(row, 12).text())
 
 def configure_buttons_for_edit(screen):
-    screen.submit_button.setVisible(False)
-    screen.edit_button.setVisible(True)
-    screen.delete_button.setVisible(True)
-    screen.cancel_button.setVisible(True)
+    screen.new_submit_button.setVisible(False)
+    screen.new_edit_button.setVisible(True)
+    screen.new_delete_button.setVisible(True)
+    screen.new_cancel_button.setVisible(True)
 
 def set_focus_for_column(screen, column):
     focus_map = {
@@ -137,7 +137,7 @@ def new_delete(screen):
         QMessageBox.Yes
     )
     if reply == QMessageBox.Yes:
-        delete_data_veterans('Veterans', screen.honor_number.text())
+        delete_veterans('Veterans', screen.honor_number.text())
         rows = get_data("Veterans_New")
         screen.load_data(rows, 'new')
         
@@ -151,6 +151,6 @@ def new_update(screen):
         QMessageBox.Yes
     )
     if reply == QMessageBox.Yes:
-        update_data_veterans('Veterans',  screen.honor_number.text(), get_form_data(screen))
+        update_veterans('Veterans',  screen.honor_number.text(), new_get_form_data(screen))
         rows = get_data("Veterans_New")
         screen.load_data(rows, 'new')
