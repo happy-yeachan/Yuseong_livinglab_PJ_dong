@@ -44,7 +44,7 @@ def get_form_data(screen):
     )
 
 def validate_form(screen):
-    # 예시: 빈 필드가 있는지 확인하는 간단한 검증 로직
+    # 데이터 확인 코드 추가 예정
     return all([
         screen.dong_name.text(),
         screen.honor_number.text(),
