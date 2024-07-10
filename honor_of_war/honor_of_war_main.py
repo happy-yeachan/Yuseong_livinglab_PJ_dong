@@ -196,7 +196,7 @@ class HonorScreen(QWidget):
         if mode == "new":
             # Submit Button
             self.submit_button = QPushButton('추가')
-            self.submit_button.clicked.connect(lambda:submit_or_edit_form_new(self))
+            self.submit_button.clicked.connect(lambda:submit_form(self))
             self.button_layout.addWidget(self.submit_button)
 
             # Edit Button
@@ -213,7 +213,7 @@ class HonorScreen(QWidget):
 
             # cancel Button
             self.cancel_button = QPushButton('취소')
-            # self.delete_button.clicked.connect(lambda: self.submit_or_edit_form_new('delete'))
+            self.cancel_button.clicked.connect(lambda:edit_cancel(self))
             self.cancel_button.setVisible(False)
             self.button_layout.addWidget(self.cancel_button)
             
@@ -226,7 +226,7 @@ class HonorScreen(QWidget):
 
             # Submit Button
             self.submit_button = QPushButton('추가')
-            self.submit_button.clicked.connect(lambda:submit_or_edit_form_new(self))
+            self.submit_button.clicked.connect(lambda:submit_form(self))
             self.form_layout.addRow(self.submit_button)
 
             # Edit Button
