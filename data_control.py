@@ -53,10 +53,13 @@ CREATE TABLE IF NOT EXISTS Veterans_Stop (
     `Move_in` TEXT,
     `Reason` TEXT NOT NULL,
     `Reason_data` TEXT,
-    `Note` TEXT
+    `Note` TEXT,
+    `Deposit_Type` TEXT NOT NULL,
+    `Bank` TEXT NOT NULL,
+    `Depositor` TEXT NOT NULL,
+    `Account` TEXT NOT NULL
 )
 ''')
-
 
 
 def get_data(table_name):
@@ -64,7 +67,7 @@ def get_data(table_name):
     rows = cursor.fetchall()
     return rows
 
-def add_data_veterans(table_name, db):
+def add_veterans(table_name, db):
     try:
         cursor.execute(f'''
             INSERT INTO {table_name}_New (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, Reason, Move_in, Note)
@@ -78,7 +81,7 @@ def add_data_veterans(table_name, db):
     except sqlite3.IntegrityError:
         print("Error: Duplicate Veteran entry")
 
-def delete_data_veterans(table_name, honor_number):
+def delete_veterans(table_name, honor_number):
     try:
         cursor.execute(f'DELETE FROM {table_name}_New WHERE Veteran = ?', (honor_number,))
         cursor.execute(f'DELETE FROM {table_name}_Current WHERE Veteran = ?', (honor_number,))
@@ -86,7 +89,7 @@ def delete_data_veterans(table_name, honor_number):
     except sqlite3.Error as e:
         print(f"An error occurred: {e}")
 
-def update_data_veterans(table_name, honor_name, db):
+def update_veterans(table_name, honor_name, db):
     try:
         cursor.execute(f'''
             UPDATE {table_name}_New
@@ -103,3 +106,16 @@ def update_data_veterans(table_name, honor_name, db):
         conn.commit()
     except sqlite3.Error as e:
         print(f"An error occurred: {e}")
+
+def add_stop_veterans(table_name, db, honor_number):
+    try:
+        cursor.execute(f'SELECT Deposit_Type, Bank, Depositor, Account FROM {table_name}_Current WHERE Veteran = {honor_number}')
+        rows = cursor.fetchall()
+        cursor.execute(f'''
+            INSERT INTO {table_name}_Stop (Dong, Registration_month, Veteran, Name, RRN, Address, Move_in, Reason, Reason_data, Note, Deposit_Type, Bank, Depositor, Account)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', db + rows[0])
+        cursor.execute(f'DELETE FROM {table_name}_Current WHERE Veteran = ?', (honor_number))
+        conn.commit()
+    except sqlite3.IntegrityError:
+        print("Error: Duplicate Veteran entry")
