@@ -142,3 +142,19 @@ def stop_update(screen):
         # update_data_veterans('Veterans',  screen.honor_number.text(), get_form_data(screen))
         rows = get_data("Veterans_stop")
         screen.load_data(rows, 'stop')
+
+
+def search_veteran(screen, honor_number):
+    if honor_number:
+        row = get_veteran_by_honor_number(honor_number)
+        if row:
+            screen.dong_name.setText(row[0])
+            screen.name.setText(row[2])
+            screen.resident_number.setText(row[3])
+            address_parts = row[5].split(' ')
+            screen.zip_code.setText(address_parts[0])
+            screen.address.setText(' '.join(address_parts[1:-1]))
+            screen.detail_address.setText(address_parts[-1])
+            screen.transfer_date.setText(row[10])
+        else:
+            QMessageBox.information(screen, '검색 결과 없음', '해당 보훈번호로 등록된 사용자를 찾을 수 없습니다.')

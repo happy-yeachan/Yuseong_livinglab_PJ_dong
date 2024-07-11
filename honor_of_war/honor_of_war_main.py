@@ -74,29 +74,41 @@ class HonorScreen(QWidget):
         
         if mode == 'stop':
             # 중지자 폼 필드 추가
-            self.dong_name = QLineEdit()
-            self.form_layout.addRow('동명', self.dong_name)
-
             self.honor_number = QLineEdit()
             self.form_layout.addRow('보훈번호', self.honor_number)
 
+            # 검색 버튼
+            self.search_button = QPushButton('검색')
+            self.search_button.clicked.connect(lambda: search_veteran(self, self.honor_number.text()))
+            self.form_layout.addRow(self.search_button)
+
+            self.dong_name = QLineEdit()
+            self.dong_name.setReadOnly(True)
+            self.form_layout.addRow('동명', self.dong_name)
+
             self.name = QLineEdit()
+            self.name.setReadOnly(True)
             self.form_layout.addRow('성명', self.name)
 
             self.resident_number = QLineEdit()
+            self.resident_number.setReadOnly(True)
             self.form_layout.addRow('주민번호', self.resident_number)
 
             # 주소
             self.zip_code = QLineEdit()
+            self.zip_code.setReadOnly(True)
             self.form_layout.addRow('우편번호', self.zip_code)
 
             self.address = QLineEdit()
+            self.address.setReadOnly(True)
             self.form_layout.addRow('기본 주소', self.address)
 
             self.detail_address = QLineEdit()
+            self.detail_address.setReadOnly(True)
             self.form_layout.addRow('상세 주소', self.detail_address)
 
             self.transfer_date = QLineEdit()
+            self.transfer_date.setReadOnly(True)
             self.transfer_date.setPlaceholderText('YYYYMMDD 형식으로 입력하세요 (예: 19990721)')
             self.form_layout.addRow('전입일', self.transfer_date)
 
@@ -117,7 +129,7 @@ class HonorScreen(QWidget):
 
             # Submit Button
             self.stop_submit_button = QPushButton('중지')
-            self.stop_submit_button.clicked.connect(lambda:stop_submit_form(self))
+            self.stop_submit_button.clicked.connect(lambda: stop_submit_form(self))
             self.button_layout.addWidget(self.stop_submit_button)
 
             # Edit Button
@@ -128,13 +140,13 @@ class HonorScreen(QWidget):
             
             # Delete Button
             self.stop_delete_button = QPushButton('삭제')
-            self.stop_delete_button.clicked.connect(lambda:stop_delete(self))
+            self.stop_delete_button.clicked.connect(lambda: stop_delete(self))
             self.stop_delete_button.setVisible(False)
             self.button_layout.addWidget(self.stop_delete_button)
 
-            # cancel Button
+            # Cancel Button
             self.stop_cancel_button = QPushButton('취소')
-            self.stop_cancel_button.clicked.connect(lambda:stop_cancel(self))
+            self.stop_cancel_button.clicked.connect(lambda: stop_cancel(self))
             self.stop_cancel_button.setVisible(False)
             self.button_layout.addWidget(self.stop_cancel_button)
             
@@ -149,7 +161,7 @@ class HonorScreen(QWidget):
             self.add_form_fields(mode)
 
         self.export_button = QPushButton('엑셀 추출하기')
-            # self.export_button.clicked.connect(self.export_to_excel)
+        # self.export_button.clicked.connect(self.export_to_excel)
         self.form_layout.addRow(self.export_button)
 
     def add_form_fields(self, mode):
