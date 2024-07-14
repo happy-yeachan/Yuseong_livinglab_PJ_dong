@@ -38,7 +38,8 @@ CREATE TABLE IF NOT EXISTS Veterans_New (
     `Account` TEXT NOT NULL,
     `Reason` TEXT NOT NULL,
     `Move_in` TEXT NOT NULL,
-    `Note` TEXT
+    `Note` TEXT,
+    `Del` INTEGER NOT NULL DEFAULT 0 CHECK (`del` IN (0, 1))
 )
 ''')
 
@@ -79,7 +80,7 @@ def add_new_veterans(table_name, db):
         ''', db)
         conn.commit()
     except sqlite3.IntegrityError:
-        print("Error: Duplicate Veteran entry")
+        return True
 
 def delete_new_veterans(table_name, honor_number):
     try:
@@ -126,9 +127,9 @@ def add_stop_veterans(table_name, db, honor_number):
             # 신규 테이블 업데이트
             cursor.execute(f'''
                 UPDATE {table_name}_New
-                SET Note = ?
+                SET Note = ?, Del = ?
                 WHERE Veteran = ?
-            ''', (rows[0][3] + " 중지됨", honor_number))
+            ''', (rows[0][3] + " 중지됨", 1, honor_number))
             
             conn.commit()
         else:
@@ -137,7 +138,6 @@ def add_stop_veterans(table_name, db, honor_number):
         print(f"Integrity error: {e}")
     except sqlite3.Error as e:
         print(f"Database error: {e}")
-
 
 def get_veteran_by_honor_number(honor_number):
     cursor.execute('SELECT * FROM Veterans_Current WHERE Veteran = ?', (honor_number,))

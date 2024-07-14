@@ -59,6 +59,19 @@ class HonorScreen(QWidget):
 
         self.setLayout(layout)
 
+    def format_resident_number(self, text):
+        # '-'가 없는 숫자 부분만 추출
+        numbers = text.replace("-", "")
+        if len(numbers) > 6:
+            # 앞 6자리를 추출하고 '-'를 추가
+            formatted = numbers[:6] + '-' + numbers[6:]
+            # 커서 위치를 유지하며 텍스트를 설정
+            cursor_position = self.resident_number.cursorPosition()
+            self.resident_number.blockSignals(True)
+            self.resident_number.setText(formatted)
+            self.resident_number.setCursorPosition(cursor_position + 1)
+            self.resident_number.blockSignals(False)
+
     def go_back(self):
         self.parentWidget().setCurrentIndex(0)
 
@@ -166,7 +179,8 @@ class HonorScreen(QWidget):
 
     def add_form_fields(self, mode):
         # 동명
-        self.dong_name = QLineEdit()
+        self.dong_name = QComboBox()
+        self.dong_name.addItems(['진잠동', '상대동', '원신흥동', '학하동', '온천1동', '온천2동', '노은1동', '노은2동', '노은3동', '신성동', '전민동', '관평동', '구즉동'])
         self.form_layout.addRow('동명', self.dong_name)
 
         # 보훈번호
@@ -180,6 +194,7 @@ class HonorScreen(QWidget):
 
         # 주민번호
         self.resident_number = QLineEdit()
+        self.resident_number.textChanged.connect(self.format_resident_number)
         self.form_layout.addRow('주민번호', self.resident_number)
 
         # 주소
