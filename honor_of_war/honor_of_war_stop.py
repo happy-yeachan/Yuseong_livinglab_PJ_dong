@@ -125,7 +125,7 @@ def stop_delete(screen):
         QMessageBox.Yes
     )
     if reply == QMessageBox.Yes:
-        add_stop_veterans('Veterans', screen.honor_number.text())
+        add_stop_veterans('Veterans', stop_get_form_data(screen), screen.honor_number.text())
         rows = get_data("Veterans_Stop")
         screen.load_data(rows, 'stop')
         
