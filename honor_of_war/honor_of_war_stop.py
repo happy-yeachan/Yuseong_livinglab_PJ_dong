@@ -125,7 +125,7 @@ def stop_delete(screen):
         QMessageBox.Yes
     )
     if reply == QMessageBox.Yes:
-        add_stop_veterans('Veterans', stop_get_form_data(screen), screen.honor_number.text())
+        add_stop_veterans(stop_get_form_data(screen), screen.honor_number.text())
         rows = get_data("Veterans_Stop")
         screen.load_data(rows, 'stop')
         
@@ -133,7 +133,7 @@ def stop_update(screen):
     # 사용자에게 수정할 것인지 확인하는 메시지 박스 생성
     reply = QMessageBox.question(
         screen, 
-        '수정 취소', 
+        '수정', 
         '정말로 수정하시겠습니까?', 
         QMessageBox.Yes | QMessageBox.No, 
         QMessageBox.Yes
