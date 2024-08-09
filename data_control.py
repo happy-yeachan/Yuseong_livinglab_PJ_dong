@@ -68,38 +68,38 @@ def get_data(table_name):
     rows = cursor.fetchall()
     return rows
 
-def add_new_veterans(table_name, db):
+def add_new_veterans(db):
     try:
         cursor.execute(f'''
-            INSERT INTO {table_name}_New (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, Reason, Move_in, Note)
+            INSERT INTO Veterans_New (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, Reason, Move_in, Note)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', db)
         cursor.execute(f'''
-            INSERT INTO {table_name}_Current (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, Reason, Move_in, Note)
+            INSERT INTO Veterans_Current (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, Reason, Move_in, Note)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', db)
         conn.commit()
     except sqlite3.IntegrityError:
         return True
 
-def delete_new_veterans(table_name, honor_number):
+def delete_new_veterans(honor_number):
     try:
-        cursor.execute(f'DELETE FROM {table_name}_New WHERE Veteran = ?', (honor_number,))
-        cursor.execute(f'DELETE FROM {table_name}_Current WHERE Veteran = ?', (honor_number,))
+        cursor.execute(f'DELETE FROM Veterans_New WHERE Veteran = ?', (honor_number,))
+        cursor.execute(f'DELETE FROM Veterans_Current WHERE Veteran = ?', (honor_number,))
         conn.commit()
     except sqlite3.Error as e:
         print(f"An error occurred: {e}")
 
-def update_new_veterans(table_name, honor_number, db):
+def update_new_veterans(honor_number, db):
     try:
         cursor.execute(f'''
-            UPDATE {table_name}_New
+            UPDATE Veterans_New
             SET Dong = ?, Registration_month = ?, Veteran = ?, Name = ?, RRN = ?, Address = ?, Deposit_Type = ?, Bank = ?, Depositor = ?, Account = ?, Reason = ?, Move_in = ?, Note = ?
             WHERE Veteran = ?
         ''', (*db, honor_number))
         
         cursor.execute(f'''
-            UPDATE {table_name}_Current
+            UPDATE Veterans_Current
             SET Dong = ?, Registration_month = ?, Veteran = ?, Name = ?, RRN = ?, Address = ?, Deposit_Type = ?, Bank = ?, Depositor = ?, Account = ?, Reason = ?, Move_in = ?, Note = ?
             WHERE Veteran = ?
         ''', (*db, honor_number))
@@ -108,25 +108,29 @@ def update_new_veterans(table_name, honor_number, db):
     except sqlite3.Error as e:
         print(f"An error occurred: {e}")
 
-def add_stop_veterans(table_name, db, honor_number):
+def get_veteran_by_honor_number(honor_number):
+    cursor.execute('SELECT * FROM Veterans_Current WHERE Veteran = ?', (honor_number,))
+    return cursor.fetchone()
+
+def add_stop_veterans(db, honor_number):
     try:
         # 보훈번호로 현재 테이블에서 데이터 조회
-        cursor.execute(f'SELECT Deposit_Type, Bank, Depositor, Account, Note FROM {table_name}_Current WHERE Veteran = ?', (honor_number,))
+        cursor.execute(f'SELECT Deposit_Type, Bank, Depositor, Account, Note FROM Veterans_Current WHERE Veteran = ?', (honor_number,))
         rows = cursor.fetchall()
         
         if rows:
             # 중지 테이블에 데이터 삽입
             cursor.execute(f'''
-                INSERT INTO {table_name}_Stop (Dong, Registration_month, Veteran, Name, RRN, Address, Move_in, Reason, Reason_date, Note, Deposit_Type, Bank, Depositor, Account)
+                INSERT INTO Veterans_Stop (Dong, Registration_month, Veteran, Name, RRN, Address, Move_in, Reason, Reason_date, Note, Deposit_Type, Bank, Depositor, Account)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', db + rows[0][:4])
             
             # 현재 테이블에서 해당 데이터 삭제
-            cursor.execute(f'DELETE FROM {table_name}_Current WHERE Veteran = ?', (honor_number,))
+            cursor.execute(f'DELETE FROM Veterans_Current WHERE Veteran = ?', (honor_number,))
             
             # 신규 테이블 업데이트
             cursor.execute(f'''
-                UPDATE {table_name}_New
+                UPDATE Veterans_New
                 SET Note = ?, Del = ?
                 WHERE Veteran = ?
             ''', (rows[0][3] + " 중지됨", 1, honor_number))
@@ -138,7 +142,3 @@ def add_stop_veterans(table_name, db, honor_number):
         print(f"Integrity error: {e}")
     except sqlite3.Error as e:
         print(f"Database error: {e}")
-
-def get_veteran_by_honor_number(honor_number):
-    cursor.execute('SELECT * FROM Veterans_Current WHERE Veteran = ?', (honor_number,))
-    return cursor.fetchone()
