@@ -1,5 +1,7 @@
 from data_control import *
-from PyQt5.QtWidgets import QTableWidget
+from openpyxl import Workbook
+import datetime
+from PyQt5.QtWidgets import QMessageBox
 
 def show_current(screen):
     screen.reset_button_styles()
@@ -13,3 +15,30 @@ def show_current(screen):
     rows = get_data("Veterans_Current")
 
     screen.load_data(rows, 'now')
+
+def export_to_excel_Now():
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Veterans_Current"
+
+    # 헤더 추가
+    headers = [
+        '동', '등록일', '보훈번호', '성명', '주민번호',
+        '주소', '입금유형', '은행명', '예금주', '계좌번호',
+        '신규사유', '전입일', '비고'
+    ]
+    ws.append(headers)
+
+    rows = get_data("Veterans_Current")
+
+    # 데이터 추가
+    for row in rows:
+        ws.append(row)
+
+    # 파일 이름 생성 (현재 날짜 기반)
+    current_date = datetime.datetime.now().strftime("%Y%m")
+    file_name = f"Veterans_Current_{current_date}.xlsx"
+
+    # 엑셀 파일 저장
+    wb.save(file_name)
+    QMessageBox.information(None, "엑셀추출", f"파일명: {file_name} \n성공적으로 저장되었습니다!")

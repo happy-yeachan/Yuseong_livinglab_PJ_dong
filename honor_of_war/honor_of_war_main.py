@@ -175,7 +175,12 @@ class HonorScreen(QWidget):
             self.add_form_fields(mode)
 
         self.export_button = QPushButton('엑셀 추출하기')
-        # self.export_button.clicked.connect(self.export_to_excel)
+        if mode == "new":
+            self.export_button.clicked.connect(lambda: export_to_excel_New())
+        elif mode == "stop":
+            self.export_button.clicked.connect(lambda: export_to_excel_Stop())
+        else:
+            self.export_button.clicked.connect(lambda: export_to_excel_Now())
         self.form_layout.addRow(self.export_button)
 
     def add_form_fields(self, mode):

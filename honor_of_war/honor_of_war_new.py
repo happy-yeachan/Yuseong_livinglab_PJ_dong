@@ -1,7 +1,7 @@
 from data_control import *
 from PyQt5.QtWidgets import QMessageBox
 import datetime
-
+from openpyxl import Workbook
 def show_new(screen):
     screen.reset_button_styles()
     screen.new_button.setStyleSheet('background-color: lightblue')
@@ -188,3 +188,31 @@ def new_update(screen):
             rows = get_data("Veterans_New")
             screen.load_data(rows, 'new')
             show_message("데이터가 성공적으로 수정되었습니다.")
+
+
+def export_to_excel_New():
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Veterans_New"
+
+    # 헤더 추가
+    headers = [
+        '동', '등록일', '보훈번호', '이름', '주민번호',
+        '주소', '입금 유형', '은행', '예금주', '계좌번호',
+        '사유', '전입일', '비고'
+    ]
+    ws.append(headers)
+
+    rows = get_data("Veterans_New")
+
+    # 데이터 추가
+    for row in rows:
+        ws.append(row)
+
+    # 파일 이름 생성 (현재 날짜 기반)
+    current_date = datetime.datetime.now().strftime("%Y%m")
+    file_name = f"Veterans_New_{current_date}.xlsx"
+
+    # 엑셀 파일 저장
+    wb.save(file_name)
+    QMessageBox.information(None, "엑셀추출", f"파일명: {file_name} \n성공적으로 저장되었습니다!")

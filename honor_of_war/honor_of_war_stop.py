@@ -1,6 +1,7 @@
 from data_control import *
 from PyQt5.QtWidgets import QMessageBox
 import datetime
+from openpyxl import Workbook
 
 def show_stop(screen):
     screen.reset_button_styles()
@@ -13,7 +14,7 @@ def show_stop(screen):
 def configure_stop_table(screen):
     screen.table.setColumnCount(10)
     screen.table.setHorizontalHeaderLabels([
-        '동', '입력날짜', '보훈번호', '성명', '주민번호', '주소',
+        '동', '등록일', '보훈번호', '성명', '주민번호', '주소',
         '전입일', '중단사유', '사유일시', '비고'
     ])
 
@@ -160,3 +161,28 @@ def search_veteran(screen, honor_number):
             screen.transfer_date.setText(row[11])
         else:
             QMessageBox.information(screen, '검색 결과 없음', '해당 보훈번호로 등록된 사용자를 찾을 수 없습니다.')
+
+def export_to_excel_Stop():
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Veterans_Stop"
+
+    # 헤더 추가
+    headers = [
+        '동', '등록일', '보훈번호', '성명', '주민번호',
+        '주소', '전입일', '중단사유', '사유일시', '비고'
+    ]
+    ws.append(headers)
+
+    rows = get_data("Veterans_Stop")
+    # 데이터 추가
+    for row in rows:
+        ws.append(row[:10])
+
+    # 파일 이름 생성 (현재 날짜 기반)
+    current_date = datetime.datetime.now().strftime("%Y%m")
+    file_name = f"Veterans_Stop_{current_date}.xlsx"
+
+    # 엑셀 파일 저장
+    wb.save(file_name)
+    QMessageBox.information(None, "엑셀추출", f"파일명: {file_name} \n성공적으로 저장되었습니다!")
