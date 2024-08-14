@@ -19,7 +19,7 @@ def configure_stop_table(screen):
 
 def stop_submit_form(screen):
     if stop_validate_form(screen):
-        add_stop_veterans('Veterans', stop_get_form_data(screen), screen.honor_number.text())
+        add_stop_veterans(stop_get_form_data(screen), screen.honor_number.text())
         rows = get_data("Veterans_Stop")
         screen.load_data(rows, 'stop')
         show_message("데이터가 성공적으로 추가되었습니다.")
@@ -119,15 +119,16 @@ def stop_delete(screen):
     # 사용자에게 제거할 것인지 확인하는 메시지 박스 생성
     reply = QMessageBox.question(
         screen, 
-        '제거 취소', 
-        '정말로 제거하시겠습니까?', 
+        '복구 확인', 
+        '정말로 복구하시겠습니까?', 
         QMessageBox.Yes | QMessageBox.No, 
         QMessageBox.Yes
     )
     if reply == QMessageBox.Yes:
-        add_stop_veterans(stop_get_form_data(screen), screen.honor_number.text())
+        delete_stop_veterans(screen.honor_number.text())
         rows = get_data("Veterans_Stop")
         screen.load_data(rows, 'stop')
+        show_message("데이터가 성공적으로 복구되었습니다.")
         
 def stop_update(screen):
     # 사용자에게 수정할 것인지 확인하는 메시지 박스 생성
@@ -139,9 +140,10 @@ def stop_update(screen):
         QMessageBox.Yes
     )
     if reply == QMessageBox.Yes:
-        # update_data_veterans('Veterans',  screen.honor_number.text(), get_form_data(screen))
+        #update_stop_veterans(screen.honor_number.text(), get_form_data(screen))
         rows = get_data("Veterans_stop")
         screen.load_data(rows, 'stop')
+        show_message("데이터가 성공적으로 수정되었습니다.")
 
 
 def search_veteran(screen, honor_number):
@@ -149,12 +151,12 @@ def search_veteran(screen, honor_number):
         row = get_veteran_by_honor_number(honor_number)
         if row:
             screen.dong_name.setText(row[0])
-            screen.name.setText(row[2])
-            screen.resident_number.setText(row[3])
+            screen.name.setText(row[3])
+            screen.resident_number.setText(row[4])
             address_parts = row[5].split(' ')
             screen.zip_code.setText(address_parts[0])
             screen.address.setText(' '.join(address_parts[1:-1]))
             screen.detail_address.setText(address_parts[-1])
-            screen.transfer_date.setText(row[10])
+            screen.transfer_date.setText(row[11])
         else:
             QMessageBox.information(screen, '검색 결과 없음', '해당 보훈번호로 등록된 사용자를 찾을 수 없습니다.')
