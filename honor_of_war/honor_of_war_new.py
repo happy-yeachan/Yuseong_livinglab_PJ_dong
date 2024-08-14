@@ -184,7 +184,7 @@ def new_update(screen):
     )
     if reply == QMessageBox.Yes:
         if new_validate_form(screen):
-            update_new_veterans( screen.honor_number.text(), new_get_form_data(screen))
+            update_new_veterans(screen.honor_number.text(), new_get_form_data(screen))
             rows = get_data("Veterans_New")
             screen.load_data(rows, 'new')
             show_message("데이터가 성공적으로 수정되었습니다.")
