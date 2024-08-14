@@ -110,7 +110,8 @@ def update_new_veterans(honor_number, db):
         print(f"An error occurred: {e}")
 
 def get_veteran_by_honor_number(honor_number):
-    cursor.execute(f'SELECT * FROM Veterans_Current WHERE Veteran = {honor_number}')
+    query = 'SELECT * FROM Veterans_Current WHERE Veteran = ?'
+    cursor.execute(query, (honor_number,))
     return cursor.fetchone()
 
 def add_stop_veterans(db, honor_number):
