@@ -145,17 +145,18 @@ class HonorScreen(QWidget):
             self.stop_submit_button.clicked.connect(lambda: stop_submit_form(self))
             self.button_layout.addWidget(self.stop_submit_button)
 
+            # Delete Button
+            self.stop_delete_button = QPushButton('복구')
+            self.stop_delete_button.clicked.connect(lambda: stop_delete(self))
+            self.stop_delete_button.setVisible(False)
+            self.button_layout.addWidget(self.stop_delete_button)
+
             # Edit Button
             self.stop_edit_button = QPushButton('수정')
             self.stop_edit_button.clicked.connect(lambda: stop_update(self))
             self.stop_edit_button.setVisible(False)
             self.button_layout.addWidget(self.stop_edit_button)
             
-            # Delete Button
-            self.stop_delete_button = QPushButton('삭제')
-            self.stop_delete_button.clicked.connect(lambda: stop_delete(self))
-            self.stop_delete_button.setVisible(False)
-            self.button_layout.addWidget(self.stop_delete_button)
 
             # Cancel Button
             self.stop_cancel_button = QPushButton('취소')
