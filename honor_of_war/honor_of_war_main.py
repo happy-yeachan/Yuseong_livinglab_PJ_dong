@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import (
-    QWidget, QVBoxLayout, QPushButton, QLabel, QHBoxLayout, QTableWidget, QFormLayout, QLineEdit, QComboBox, QTextEdit, QSpacerItem, QSizePolicy
+   QTableWidgetItem, QWidget, QVBoxLayout, QPushButton, QLabel, QHBoxLayout, QTableWidget, QFormLayout, QLineEdit, QComboBox, QTextEdit, QSpacerItem, QSizePolicy
 )
 
 from honor_of_war.honor_of_war_current import *
@@ -145,17 +145,18 @@ class HonorScreen(QWidget):
             self.stop_submit_button.clicked.connect(lambda: stop_submit_form(self))
             self.button_layout.addWidget(self.stop_submit_button)
 
+            # Delete Button
+            self.stop_delete_button = QPushButton('복구')
+            self.stop_delete_button.clicked.connect(lambda: stop_delete(self))
+            self.stop_delete_button.setVisible(False)
+            self.button_layout.addWidget(self.stop_delete_button)
+
             # Edit Button
             self.stop_edit_button = QPushButton('수정')
             self.stop_edit_button.clicked.connect(lambda: stop_update(self))
             self.stop_edit_button.setVisible(False)
             self.button_layout.addWidget(self.stop_edit_button)
             
-            # Delete Button
-            self.stop_delete_button = QPushButton('삭제')
-            self.stop_delete_button.clicked.connect(lambda: stop_delete(self))
-            self.stop_delete_button.setVisible(False)
-            self.button_layout.addWidget(self.stop_delete_button)
 
             # Cancel Button
             self.stop_cancel_button = QPushButton('취소')
@@ -174,7 +175,12 @@ class HonorScreen(QWidget):
             self.add_form_fields(mode)
 
         self.export_button = QPushButton('엑셀 추출하기')
-        # self.export_button.clicked.connect(self.export_to_excel)
+        if mode == "new":
+            self.export_button.clicked.connect(lambda: export_to_excel_New())
+        elif mode == "stop":
+            self.export_button.clicked.connect(lambda: export_to_excel_Stop())
+        else:
+            self.export_button.clicked.connect(lambda: export_to_excel_Now())
         self.form_layout.addRow(self.export_button)
 
     def add_form_fields(self, mode):
