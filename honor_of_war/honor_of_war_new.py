@@ -7,7 +7,7 @@ def show_new(screen):
     screen.new_button.setStyleSheet('background-color: lightblue')
     screen.label.setText('참전 명예 수당 지급 신규자')
     configure_new_table(screen)
-    rows = get_data("Veterans_New")
+    rows = get_data("Honor_of_War_New")
     screen.load_data(rows, 'new')
 
 def configure_new_table(screen):
@@ -19,11 +19,11 @@ def configure_new_table(screen):
 
 def new_submit_form(screen):
     if new_validate_form(screen):
-        tmp = add_new_veterans(new_get_form_data(screen))
+        tmp = add_new_Honor_of_War(new_get_form_data(screen))
         if tmp:
             show_message("이미 등록된 보훈번호입니다.")
         else:
-            rows = get_data("Veterans_New")
+            rows = get_data("Honor_of_War_New")
             screen.load_data(rows, 'new')
             show_message("데이터가 성공적으로 추가되었습니다.")
 
@@ -169,8 +169,8 @@ def new_delete(screen):
         QMessageBox.Yes
     )
     if reply == QMessageBox.Yes:
-        delete_new_veterans(screen.honor_number.text())
-        rows = get_data("Veterans_New")
+        delete_new_Honor_of_War(screen.honor_number.text())
+        rows = get_data("Honor_of_War_New")
         screen.load_data(rows, 'new')
         
 def new_update(screen):
@@ -184,8 +184,8 @@ def new_update(screen):
     )
     if reply == QMessageBox.Yes:
         if new_validate_form(screen):
-            update_new_veterans(screen.honor_number.text(), new_get_form_data(screen))
-            rows = get_data("Veterans_New")
+            update_new_Honor_of_War(screen.honor_number.text(), new_get_form_data(screen))
+            rows = get_data("Honor_of_War_New")
             screen.load_data(rows, 'new')
             show_message("데이터가 성공적으로 수정되었습니다.")
 
@@ -193,7 +193,7 @@ def new_update(screen):
 def export_to_excel_New():
     wb = Workbook()
     ws = wb.active
-    ws.title = "Veterans_New"
+    ws.title = "참전유공자_신규자"
 
     # 헤더 추가
     headers = [
@@ -203,7 +203,7 @@ def export_to_excel_New():
     ]
     ws.append(headers)
 
-    rows = get_data("Veterans_New")
+    rows = get_data("Honor_of_War_New")
 
     # 데이터 추가
     for row in rows:
@@ -211,7 +211,7 @@ def export_to_excel_New():
 
     # 파일 이름 생성 (현재 날짜 기반)
     current_date = datetime.datetime.now().strftime("%Y%m")
-    file_name = f"Veterans_New_{current_date}.xlsx"
+    file_name = f"참전유공자_신규자_{current_date}.xlsx"
 
     # 엑셀 파일 저장
     wb.save(file_name)
