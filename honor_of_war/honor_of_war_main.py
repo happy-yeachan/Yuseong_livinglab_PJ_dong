@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import (
-   QTableWidgetItem, QWidget, QVBoxLayout, QPushButton, QLabel, QHBoxLayout, QTableWidget, QFormLayout, QLineEdit, QComboBox, QTextEdit, QSpacerItem, QSizePolicy
+   QCompleter, QTableWidgetItem, QWidget, QVBoxLayout, QPushButton, QLabel, QHBoxLayout, QTableWidget, QFormLayout, QLineEdit, QComboBox, QTextEdit, QSpacerItem, QSizePolicy
 )
-
+from PyQt5.QtCore import Qt
 from honor_of_war.honor_of_war_current import *
 from honor_of_war.honor_of_war_new import *
 from honor_of_war.honor_of_war_stop import *
@@ -59,18 +59,7 @@ class HonorScreen(QWidget):
 
         self.setLayout(layout)
 
-    def format_resident_number(self, text):
-        # '-'가 없는 숫자 부분만 추출
-        numbers = text.replace("-", "")
-        if len(numbers) > 6:
-            # 앞 6자리를 추출하고 '-'를 추가
-            formatted = numbers[:6] + '-' + numbers[6:]
-            # 커서 위치를 유지하며 텍스트를 설정
-            cursor_position = self.resident_number.cursorPosition()
-            self.resident_number.blockSignals(True)
-            self.resident_number.setText(formatted)
-            self.resident_number.setCursorPosition(cursor_position + 1)
-            self.resident_number.blockSignals(False)
+
 
     def go_back(self):
         self.parentWidget().setCurrentIndex(0)
@@ -195,7 +184,7 @@ class HonorScreen(QWidget):
 
         # 성명
         self.name = QLineEdit()
-        # self.name.textChanged.connect(self.update_depositor_name)
+        self.name.textChanged.connect(self.update_depositor_name)
         self.form_layout.addRow('성명', self.name)
 
         # 주민번호
@@ -218,11 +207,41 @@ class HonorScreen(QWidget):
         self.deposit_type.addItems(['10:계좌이체', '20:대량이체', '30:원천징수', '40:고지서', '50:CMS', '60:수표', '99:현금'])
         self.form_layout.addRow('입금유형', self.deposit_type)
 
-        # 은행명
-        self.bank_name = QComboBox()
-        self.bank_name.addItems(['KB국민은행', '신한은행', '하나은행', '우리은행', 'NH농협은행', 'IBK기업은행'])
-        self.form_layout.addRow('은행명', self.bank_name)
+        # 은행 및 증권사 리스트 (번호 포함)
+        bank_list = [
+            '', '001:한국은행', '002:산업은행', '003:기업은행', '004:국민은행', '005:하나은행',
+            '007:수출입은행', '008:수협은행', '011:농협은행', '012:지역 농축협', '020:우리은행',
+            '023:SC제일은행', '027:한국씨티은행', '031:대구은행', '032:부산은행', '034:광주은행',
+            '035:제주은행', '037:전북은행', '039:경남은행', '045:새마을금고중앙회', '048:신협',
+            '050:상호저축은행', '051:기타 외국계은행(중국 교통은행 등)', '052:모간스탠리은행', '054:HSBC은행',
+            '055:도이치은행', '057:제이피모간체이스은행', '058:미즈호은행', '059:미쓰비시도쿄UFJ은행', 
+            '060:BOA은행', '061:비엔피파리바은행', '062:중국공상은행', '063:중국은행', '064:산림조합중앙회',
+            '065:대화은행', '067:중국건설은행', '071:우체국', '076:신용보증기금', '077:기술보증기금',
+            '081:KEB하나은행', '088:신한은행', '089:케이뱅크', '090:카카오뱅크', '092:토스뱅크',
+            '093:한국주택금융공사', '094:서울보증보험', '209:유안타증권', '218:KB증권', '221:상상인증권',
+            '223:리딩투자증권', '224:BNK투자증권', '225:IBK투자증권', '226:KB증권', '227:KTB투자증권',
+            '238:미래에셋대우', '240:삼성증권', '243:한국투자증권', '247:NH투자증권', '261:교보증권',
+            '262:하이투자증권', '263:현대차투자증권', '264:키움증권', '265:이베스트투자증권', '266:SK증권',
+            '267:대신증권', '268:메리츠종합금융증권', '269:한화투자증권', '270:하나금융투자', '271:토스증권',
+            '278:신한금융투자', '279:DB금융투자', '280:유진투자증권', '287:메리츠종합금융증권', '288:카카오페이증권',
+            '289:NH투자증권', '290:부국증권', '291:신영증권', '292:케이프투자증권', '294:한국포스증권'
+        ]
 
+        # 은행명 콤보박스
+        self.bank_name = QComboBox()
+        self.bank_name.addItems(bank_list)
+
+        # QComboBox를 편집 가능 상태로 설정
+        self.bank_name.setEditable(True)
+
+        # QCompleter 설정
+        completer = QCompleter(bank_list)
+        completer.setCaseSensitivity(False)  # 대소문자 구분하지 않음
+        completer.setFilterMode(Qt.MatchContains)  # 중간 단어와 일치하는 항목도 검색 가능
+        self.bank_name.setCompleter(completer)
+
+        self.form_layout.addRow('은행명', self.bank_name)
+        
         # 예금주
         self.depositor_name = QLineEdit()
         self.form_layout.addRow('예금주', self.depositor_name)
@@ -238,8 +257,8 @@ class HonorScreen(QWidget):
 
         # 전입일
         self.transfer_date = QLineEdit()
-        self.transfer_date.setPlaceholderText('YYYYMMDD 형식으로 입력하세요 (예: 19990721)')
-        # self.transfer_date.textChanged.connect(self.format_date)
+        self.transfer_date.setPlaceholderText('YYYYMMDD 형식으로 입력하세요')
+        self.transfer_date.textChanged.connect(self.format_transfer_data)
         self.form_layout.addRow('전입일', self.transfer_date)
 
         # 비고
@@ -301,3 +320,42 @@ class HonorScreen(QWidget):
             self.table.cellClicked.connect(lambda row, column: new_load_selected_data(self, row, column))
         elif type == "stop":
             self.table.cellClicked.connect(lambda row, column: stop_load_selected_data(self, row, column))
+
+    def format_transfer_data(self, text):
+        # '-'가 없는 숫자 부분만 추출
+        numbers = text.replace(".", "")
+        if len(numbers) == 4:
+            # 앞 6자리를 추출하고 '-'를 추가
+            formatted = numbers[:4] + '.'
+            # 커서 위치를 유지하며 텍스트를 설정
+            cursor_position = self.transfer_date.cursorPosition()
+            self.transfer_date.blockSignals(True)
+            self.transfer_date.setText(formatted)
+            self.transfer_date.setCursorPosition(cursor_position + 1)
+            self.transfer_date.blockSignals(False)
+        elif len(numbers) == 7:
+            # 앞 6자리를 추출하고 '-'를 추가
+            formatted = numbers[:7] + '.'
+            # 커서 위치를 유지하며 텍스트를 설정
+            cursor_position = self.transfer_date.cursorPosition()
+            self.transfer_date.blockSignals(True)
+            self.transfer_date.setText(formatted)
+            self.transfer_date.setCursorPosition(cursor_position + 1)
+            self.transfer_date.blockSignals(False)
+
+    def update_depositor_name(self, text):
+        # 성명 필드의 텍스트를 예금주 필드로 복사
+        self.depositor_name.setText(text)
+        
+    def format_resident_number(self, text):
+        # '-'가 없는 숫자 부분만 추출
+        numbers = text.replace("-", "")
+        if len(numbers) > 6:
+            # 앞 6자리를 추출하고 '-'를 추가
+            formatted = numbers[:6] + '-' + numbers[6:]
+            # 커서 위치를 유지하며 텍스트를 설정
+            cursor_position = self.resident_number.cursorPosition()
+            self.resident_number.blockSignals(True)
+            self.resident_number.setText(formatted)
+            self.resident_number.setCursorPosition(cursor_position + 1)
+            self.resident_number.blockSignals(False)
