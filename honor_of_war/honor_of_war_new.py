@@ -2,6 +2,8 @@ from data_control import *
 from PyQt5.QtWidgets import QMessageBox
 import datetime
 from openpyxl import Workbook
+
+
 def show_new(screen):
     screen.reset_button_styles()
     screen.new_button.setStyleSheet('background-color: lightblue')
@@ -203,11 +205,29 @@ def export_to_excel_New():
     ]
     ws.append(headers)
 
+    # 데이터 가져오기 (예제 함수)
     rows = get_data("Honor_of_War_New")
 
     # 데이터 추가
     for row in rows:
         ws.append(row)
+        last_row = ws.max_row
+        for col in range(1, len(row) + 1):
+            cell = ws.cell(row=last_row, column=col)
+
+    # 모든 열의 크기 자동 조정
+    for column in ws.columns:
+        max_length = 0
+        column_letter = column[0].column_letter
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(cell.value)
+            except TypeError:
+                pass
+        # 열 너비 설정
+        adjusted_width = (max_length + 3)
+        ws.column_dimensions[column_letter].width = adjusted_width
 
     # 파일 이름 생성 (현재 날짜 기반)
     current_date = datetime.datetime.now().strftime("%Y%m")
