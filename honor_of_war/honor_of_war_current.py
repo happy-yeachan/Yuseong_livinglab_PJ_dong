@@ -34,6 +34,20 @@ def export_to_excel_Now():
     # 데이터 추가
     for row in rows:
         ws.append(row)
+        
+    # 모든 열의 크기 자동 조정
+    for column in ws.columns:
+        max_length = 0
+        column_letter = column[0].column_letter
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(cell.value)
+            except TypeError:
+                pass
+        # 열 너비 설정
+        adjusted_width = (max_length + 3)
+        ws.column_dimensions[column_letter].width = adjusted_width
 
     # 파일 이름 생성 (현재 날짜 기반)
     current_date = datetime.datetime.now().strftime("%Y%m")
