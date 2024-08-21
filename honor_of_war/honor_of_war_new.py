@@ -87,7 +87,7 @@ def new_validate_form(screen):
         screen.account_number.setFocus()
         return False
 
-    if len(screen.transfer_date.text()) != 8 or not screen.transfer_date.text().isdigit():
+    if len(screen.transfer_date.text().replace(".", "")) != 8 or not screen.transfer_date.text().isdigit():
         show_message("전입일은 YYYYMMDD 형식의 8자리 숫자여야 합니다.")
         screen.transfer_date.setFocus()
         return False

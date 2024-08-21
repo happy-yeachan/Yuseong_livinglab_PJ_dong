@@ -324,23 +324,28 @@ class HonorScreen(QWidget):
     def format_transfer_data(self, text):
         # '-'가 없는 숫자 부분만 추출
         numbers = text.replace(".", "")
-        if len(numbers) == 4:
-            # 앞 6자리를 추출하고 '-'를 추가
-            formatted = numbers[:4] + '.'
+
+        # 입력된 숫자가 8자리를 초과하지 않도록 제한
+        if len(numbers) > 8:
+            numbers = numbers[:8]
+
+
+        if len(numbers) == 8:  # 사용자가 8자리(YYYYMMDD)까지 입력했을 때
+            # YYYY.MM.DD 형식으로 변환
+            formatted = numbers[:4] + '.' + numbers[4:6] + '.' + numbers[6:]
             # 커서 위치를 유지하며 텍스트를 설정
             cursor_position = self.transfer_date.cursorPosition()
             self.transfer_date.blockSignals(True)
             self.transfer_date.setText(formatted)
-            self.transfer_date.setCursorPosition(cursor_position + 1)
+            self.transfer_date.setCursorPosition(cursor_position + 2)  # 두 개의 '.'을 추가했으므로 커서를 2칸 앞으로 이동
             self.transfer_date.blockSignals(False)
-        elif len(numbers) == 7:
-            # 앞 6자리를 추출하고 '-'를 추가
-            formatted = numbers[:7] + '.'
-            # 커서 위치를 유지하며 텍스트를 설정
+        elif len(numbers) == 6:  # 사용자가 6자리(YYYYMM)까지 입력했을 때
+            # YYYY.MM 형식으로 변환
+            formatted = numbers[:4] + '.' + numbers[4:]
             cursor_position = self.transfer_date.cursorPosition()
             self.transfer_date.blockSignals(True)
             self.transfer_date.setText(formatted)
-            self.transfer_date.setCursorPosition(cursor_position + 1)
+            self.transfer_date.setCursorPosition(cursor_position + 1)  # 한 개의 '.'을 추가했으므로 커서를 1칸 앞으로 이동
             self.transfer_date.blockSignals(False)
 
     def update_depositor_name(self, text):
