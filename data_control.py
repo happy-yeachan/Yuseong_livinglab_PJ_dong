@@ -127,7 +127,7 @@ def add_stop_Honor_of_War(db, honor_number):
             ''', db + rows[0])
             
             # 현재 테이블에서 해당 데이터 삭제
-            cursor.execute(f'DELETE FROM Honor_of_WarCurrent WHERE Veteran = ?', (honor_number,))
+            cursor.execute(f'DELETE FROM Honor_of_War_Current WHERE Veteran = ?', (honor_number,))
             
             # 신규 테이블 업데이트
             cursor.execute(f'''
