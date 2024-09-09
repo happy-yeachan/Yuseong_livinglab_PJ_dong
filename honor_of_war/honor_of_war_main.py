@@ -96,11 +96,6 @@ class HonorScreen(QWidget):
             self.resident_number.setReadOnly(True)
             self.form_layout.addRow('주민번호', self.resident_number)
 
-            # 주소
-            self.zip_code = QLineEdit()
-            self.zip_code.setReadOnly(True)
-            self.form_layout.addRow('우편번호', self.zip_code)
-
             self.address = QLineEdit()
             self.address.setReadOnly(True)
             self.form_layout.addRow('기본 주소', self.address)
@@ -191,10 +186,6 @@ class HonorScreen(QWidget):
         self.resident_number = QLineEdit()
         self.resident_number.textChanged.connect(self.format_resident_number)
         self.form_layout.addRow('주민번호', self.resident_number)
-
-        # 주소
-        self.zip_code = QLineEdit()
-        self.form_layout.addRow('우편번호', self.zip_code)
 
         self.address = QLineEdit()
         self.form_layout.addRow('기본 주소', self.address)

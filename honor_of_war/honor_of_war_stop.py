@@ -155,9 +155,8 @@ def search_veteran(screen, honor_number):
             screen.name.setText(row[3])
             screen.resident_number.setText(row[4])
             address_parts = row[5].split(' ')
-            screen.zip_code.setText(address_parts[0])
-            screen.address.setText(' '.join(address_parts[1:-1]))
-            screen.detail_address.setText(address_parts[-1])
+            screen.address.setText(' '.join(address_parts[0]))
+            screen.detail_address.setText(address_parts[1])
             screen.transfer_date.setText(row[11])
         else:
             QMessageBox.information(screen, '검색 결과 없음', '해당 보훈번호로 등록된 사용자를 찾을 수 없습니다.')
