@@ -34,7 +34,7 @@ def stop_get_form_data(screen):
         screen.honor_number.text(),
         screen.name.text(),
         screen.resident_number.text(),
-        f"{screen.zip_code.text()} {screen.address.text()} {screen.detail_address.text()}",
+        f"{screen.address.text()} {screen.detail_address.text()}",
         screen.transfer_date.text(),
         screen.stop_reason.text(),
         screen.stop_date.text(),
