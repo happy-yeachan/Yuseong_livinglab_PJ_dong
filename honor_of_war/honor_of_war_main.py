@@ -107,6 +107,7 @@ class HonorScreen(QWidget):
             self.transfer_date = QLineEdit()
             self.transfer_date.setReadOnly(True)
             self.transfer_date.setPlaceholderText('YYYYMMDD 형식으로 입력하세요 (예: 19990721)')
+            self.transfer_date.textChanged.connect(self.format_transfer_data)
             self.form_layout.addRow('전입일', self.transfer_date)
 
             self.stop_reason = QLineEdit()
