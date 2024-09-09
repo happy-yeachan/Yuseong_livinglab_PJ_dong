@@ -21,7 +21,7 @@ def export_to_excel_Now():
     # 워크북 생성 (각 시트가 추가될 때까지 유지됨)
     wb = Workbook()
     ws = wb.active
-    ws.title = "참전유공자_현황"
+    ws.title = "현황"
 
     # '현황' 시트 헤더 추가
     headers = [
