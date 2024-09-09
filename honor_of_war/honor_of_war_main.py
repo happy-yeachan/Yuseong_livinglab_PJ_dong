@@ -96,11 +96,6 @@ class HonorScreen(QWidget):
             self.resident_number.setReadOnly(True)
             self.form_layout.addRow('주민번호', self.resident_number)
 
-            # 주소
-            self.zip_code = QLineEdit()
-            self.zip_code.setReadOnly(True)
-            self.form_layout.addRow('우편번호', self.zip_code)
-
             self.address = QLineEdit()
             self.address.setReadOnly(True)
             self.form_layout.addRow('기본 주소', self.address)
@@ -163,14 +158,10 @@ class HonorScreen(QWidget):
             # 기존 폼 필드 복원
             self.add_form_fields(mode)
 
-        self.export_button = QPushButton('엑셀 추출하기')
-        if mode == "new":
-            self.export_button.clicked.connect(lambda: export_to_excel_New())
-        elif mode == "stop":
-            self.export_button.clicked.connect(lambda: export_to_excel_Stop())
-        else:
+        if mode == "now":
+            self.export_button = QPushButton('엑셀 추출하기')
             self.export_button.clicked.connect(lambda: export_to_excel_Now())
-        self.form_layout.addRow(self.export_button)
+            self.form_layout.addRow(self.export_button)
 
     def add_form_fields(self, mode):
         # 동명
@@ -191,10 +182,6 @@ class HonorScreen(QWidget):
         self.resident_number = QLineEdit()
         self.resident_number.textChanged.connect(self.format_resident_number)
         self.form_layout.addRow('주민번호', self.resident_number)
-
-        # 주소
-        self.zip_code = QLineEdit()
-        self.form_layout.addRow('우편번호', self.zip_code)
 
         self.address = QLineEdit()
         self.form_layout.addRow('기본 주소', self.address)
@@ -324,23 +311,28 @@ class HonorScreen(QWidget):
     def format_transfer_data(self, text):
         # '-'가 없는 숫자 부분만 추출
         numbers = text.replace(".", "")
-        if len(numbers) == 4:
-            # 앞 6자리를 추출하고 '-'를 추가
-            formatted = numbers[:4] + '.'
+
+        # 입력된 숫자가 8자리를 초과하지 않도록 제한
+        if len(numbers) > 8:
+            numbers = numbers[:8]
+
+
+        if len(numbers) == 8:  # 사용자가 8자리(YYYYMMDD)까지 입력했을 때
+            # YYYY.MM.DD 형식으로 변환
+            formatted = numbers[:4] + '.' + numbers[4:6] + '.' + numbers[6:]
             # 커서 위치를 유지하며 텍스트를 설정
             cursor_position = self.transfer_date.cursorPosition()
             self.transfer_date.blockSignals(True)
             self.transfer_date.setText(formatted)
-            self.transfer_date.setCursorPosition(cursor_position + 1)
+            self.transfer_date.setCursorPosition(cursor_position + 2)  # 두 개의 '.'을 추가했으므로 커서를 2칸 앞으로 이동
             self.transfer_date.blockSignals(False)
-        elif len(numbers) == 7:
-            # 앞 6자리를 추출하고 '-'를 추가
-            formatted = numbers[:7] + '.'
-            # 커서 위치를 유지하며 텍스트를 설정
+        elif len(numbers) == 6:  # 사용자가 6자리(YYYYMM)까지 입력했을 때
+            # YYYY.MM 형식으로 변환
+            formatted = numbers[:4] + '.' + numbers[4:]
             cursor_position = self.transfer_date.cursorPosition()
             self.transfer_date.blockSignals(True)
             self.transfer_date.setText(formatted)
-            self.transfer_date.setCursorPosition(cursor_position + 1)
+            self.transfer_date.setCursorPosition(cursor_position + 1)  # 한 개의 '.'을 추가했으므로 커서를 1칸 앞으로 이동
             self.transfer_date.blockSignals(False)
 
     def update_depositor_name(self, text):

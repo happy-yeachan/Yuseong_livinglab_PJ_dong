@@ -36,7 +36,7 @@ def new_get_form_data(screen):
         screen.honor_number.text(),
         screen.name.text(),
         screen.resident_number.text(),
-        f"{screen.zip_code.text()} {screen.address.text()} {screen.detail_address.text()}",
+        f"{screen.address.text()} {screen.detail_address.text()}",
         screen.deposit_type.currentText(),
         screen.bank_name.currentText(),
         screen.depositor_name.text(),
@@ -53,7 +53,6 @@ def new_validate_form(screen):
         '보훈번호': screen.honor_number.text(),
         '성명': screen.name.text(),
         '주민번호': screen.resident_number.text(),
-        '우편번호': screen.zip_code.text(),
         '기본 주소': screen.address.text(),
         '상세 주소': screen.detail_address.text(),
         '입금유형': screen.deposit_type.currentText(),
@@ -77,20 +76,11 @@ def new_validate_form(screen):
         screen.resident_number.setFocus()
         return False
 
-    if not screen.zip_code.text().isdigit() or len(screen.zip_code.text()) != 5:
-        show_message("우편번호는 5자리 숫자여야 합니다.")
-        screen.zip_code.setFocus()
-        return False
-
     if len(screen.account_number.text()) < 10:
         show_message("계좌번호는 최소 10자리 이상이어야 합니다.")
         screen.account_number.setFocus()
         return False
 
-    if len(screen.transfer_date.text()) != 8 or not screen.transfer_date.text().isdigit():
-        show_message("전입일은 YYYYMMDD 형식의 8자리 숫자여야 합니다.")
-        screen.transfer_date.setFocus()
-        return False
 
     # 모든 유효성 검사를 통과하면 True 반환
     return True
@@ -111,9 +101,8 @@ def set_form_fields_from_table(screen, row):
     screen.name.setText(screen.table.item(row, 3).text())
     screen.resident_number.setText(screen.table.item(row, 4).text())
     address_parts = screen.table.item(row, 5).text().split(' ')
-    screen.zip_code.setText(address_parts[0])
-    screen.address.setText(' '.join(address_parts[1:-1]))
-    screen.detail_address.setText(address_parts[-1])
+    screen.address.setText(' '.join(address_parts[0]))
+    screen.detail_address.setText(address_parts[1])
     screen.deposit_type.setCurrentText(screen.table.item(row, 6).text())
     screen.bank_name.setCurrentText(screen.table.item(row, 7).text())
     screen.depositor_name.setText(screen.table.item(row, 8).text())
@@ -135,14 +124,13 @@ def set_focus_for_column(screen, column):
         2: screen.honor_number,
         3: screen.name,
         4: screen.resident_number,
-        5: screen.zip_code,
-        6: screen.deposit_type,
-        7: screen.bank_name,
-        8: screen.depositor_name,
-        9: screen.account_number,
-        10: screen.new_reason,
-        11: screen.transfer_date,
-        12: screen.notes,
+        5: screen.deposit_type,
+        6: screen.bank_name,
+        7: screen.depositor_name,
+        8: screen.account_number,
+        9: screen.new_reason,
+        10: screen.transfer_date,
+        11: screen.notes,
     }
     if column in focus_map:
         focus_map[column].setFocus()
@@ -190,49 +178,3 @@ def new_update(screen):
             rows = get_data("Honor_of_War_New")
             screen.load_data(rows, 'new')
             show_message("데이터가 성공적으로 수정되었습니다.")
-
-
-def export_to_excel_New():
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "참전유공자_신규자"
-
-    # 헤더 추가
-    headers = [
-        '동', '등록일', '보훈번호', '이름', '주민번호',
-        '주소', '입금 유형', '은행', '예금주', '계좌번호',
-        '사유', '전입일', '비고'
-    ]
-    ws.append(headers)
-
-    # 데이터 가져오기 (예제 함수)
-    rows = get_data("Honor_of_War_New")
-
-    # 데이터 추가
-    for row in rows:
-        ws.append(row)
-        last_row = ws.max_row
-        for col in range(1, len(row) + 1):
-            cell = ws.cell(row=last_row, column=col)
-
-    # 모든 열의 크기 자동 조정
-    for column in ws.columns:
-        max_length = 0
-        column_letter = column[0].column_letter
-        for cell in column:
-            try:
-                if len(str(cell.value)) > max_length:
-                    max_length = len(cell.value)
-            except TypeError:
-                pass
-        # 열 너비 설정
-        adjusted_width = (max_length + 3)
-        ws.column_dimensions[column_letter].width = adjusted_width
-
-    # 파일 이름 생성 (현재 날짜 기반)
-    current_date = datetime.datetime.now().strftime("%Y%m")
-    file_name = f"참전유공자_신규자_{current_date}.xlsx"
-
-    # 엑셀 파일 저장
-    wb.save(file_name)
-    QMessageBox.information(None, "엑셀추출", f"파일명: {file_name} \n성공적으로 저장되었습니다!")

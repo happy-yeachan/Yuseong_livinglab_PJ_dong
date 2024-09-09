@@ -26,7 +26,7 @@ class MainWindow(QWidget):
         self.veteran_button.clicked.connect(lambda: self.set_screen(2))
         layout.addWidget(self.veteran_button, 0, 1)
 
-        self.spouse_button = QPushButton('보훈 예우 배우자')
+        self.spouse_button = QPushButton('참전 명예 배우자')
         self.spouse_button.setFixedSize(250, 150)  # 고정 크기 설정
         self.spouse_button.clicked.connect(lambda: self.set_screen(3))
         layout.addWidget(self.spouse_button, 0, 2)
