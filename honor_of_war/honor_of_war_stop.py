@@ -48,7 +48,6 @@ def stop_validate_form(screen):
         screen.honor_number.text(),
         screen.name.text(),
         screen.resident_number.text(),
-        screen.zip_code.text(),
         screen.address.text(),
         screen.detail_address.text(),
         screen.transfer_date.text(),
