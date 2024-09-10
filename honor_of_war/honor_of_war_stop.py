@@ -71,7 +71,6 @@ def set_form_fields_from_table(screen, row):
     screen.name.setText(screen.table.item(row, 3).text())
     screen.resident_number.setText(screen.table.item(row, 4).text())
     address_parts = screen.table.item(row, 5).text().split(' ')
-    screen.zip_code.setText(address_parts[0])
     screen.address.setText(' '.join(address_parts[1:-1]))
     screen.detail_address.setText(address_parts[-1])
     screen.transfer_date.setText(screen.table.item(row, 6).text())
@@ -88,11 +87,6 @@ def configure_buttons_for_edit(screen):
 
 def set_focus_for_column(screen, column):
     focus_map = {
-        0: screen.dong_name,
-        2: screen.honor_number,
-        3: screen.name,
-        4: screen.resident_number,
-        5: screen.zip_code,
         6: screen.transfer_date,
         7: screen.stop_reason,
         8: screen.stop_date,
