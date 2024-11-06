@@ -116,7 +116,7 @@ class HonorScreen(QWidget):
             self.stop_date = QLineEdit()
             self.stop_date.setPlaceholderText('YYYYMMDD 형식으로 입력하세요 (예: 19990721)')
             self.stop_date.textChanged.connect(self.format_stop_date)
-            self.form_layout.addRow('사유일시', self.stop_date)
+            self.form_layout.addRow('년월일', self.stop_date)
 
             self.notes = QTextEdit()
             self.notes.setPlaceholderText('자유롭게 입력하세요')
@@ -371,10 +371,15 @@ class HonorScreen(QWidget):
     def format_resident_number(self, text):
         # '-'가 없는 숫자 부분만 추출
         numbers = text.replace("-", "")
+        
+        # 숫자가 13자리 이상이면 잘라냄 (앞 6자리 + 뒤 7자리)
+        if len(numbers) > 13:
+            numbers = numbers[:13]
+        
         if len(numbers) > 6:
             # 앞 6자리를 추출하고 '-'를 추가
             formatted = numbers[:6] + '-' + numbers[6:]
-            # 커서 위치를 유지하며 텍스트를 설정
+             # 커서 위치를 유지하며 텍스트를 설정
             cursor_position = self.resident_number.cursorPosition()
             self.resident_number.blockSignals(True)
             self.resident_number.setText(formatted)
