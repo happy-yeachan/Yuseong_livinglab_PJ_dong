@@ -77,6 +77,8 @@ class HonorScreen(QWidget):
         if mode == 'stop':
             # 중지자 폼 필드 추가
             self.honor_number = QLineEdit()
+            self.honor_number.setPlaceholderText('XX-XXXXXX 형식으로 입력하세요.')
+            self.honor_number.textChanged.connect(self.format_honor_number)
             self.form_layout.addRow('보훈번호', self.honor_number)
 
             # 검색 버튼
@@ -107,6 +109,7 @@ class HonorScreen(QWidget):
             self.transfer_date = QLineEdit()
             self.transfer_date.setReadOnly(True)
             self.transfer_date.setPlaceholderText('YYYYMMDD 형식으로 입력하세요 (예: 19990721)')
+            self.transfer_date.textChanged.connect(self.format_transfer_data)
             self.form_layout.addRow('전입일', self.transfer_date)
 
             self.stop_reason = QLineEdit()
@@ -114,7 +117,8 @@ class HonorScreen(QWidget):
 
             self.stop_date = QLineEdit()
             self.stop_date.setPlaceholderText('YYYYMMDD 형식으로 입력하세요 (예: 19990721)')
-            self.form_layout.addRow('사유일시', self.stop_date)
+            self.stop_date.textChanged.connect(self.format_stop_date)
+            self.form_layout.addRow('년월일', self.stop_date)
 
             self.notes = QTextEdit()
             self.notes.setPlaceholderText('자유롭게 입력하세요')
@@ -171,6 +175,8 @@ class HonorScreen(QWidget):
 
         # 보훈번호
         self.honor_number = QLineEdit()
+        self.honor_number.setPlaceholderText('XX-XXXXXX 형식으로 입력하세요.')
+        self.honor_number.textChanged.connect(self.format_honor_number)
         self.form_layout.addRow('보훈번호', self.honor_number)
 
         # 성명
@@ -335,6 +341,33 @@ class HonorScreen(QWidget):
             self.transfer_date.setCursorPosition(cursor_position + 1)  # 한 개의 '.'을 추가했으므로 커서를 1칸 앞으로 이동
             self.transfer_date.blockSignals(False)
 
+    def format_stop_date(self, text):
+        # '-'가 없는 숫자 부분만 추출
+        numbers = text.replace(".", "")
+
+        # 입력된 숫자가 8자리를 초과하지 않도록 제한
+        if len(numbers) > 8:
+            numbers = numbers[:8]
+
+
+        if len(numbers) == 8:  # 사용자가 8자리(YYYYMMDD)까지 입력했을 때
+            # YYYY.MM.DD 형식으로 변환
+            formatted = numbers[:4] + '.' + numbers[4:6] + '.' + numbers[6:]
+            # 커서 위치를 유지하며 텍스트를 설정
+            cursor_position = self.stop_date.cursorPosition()
+            self.stop_date.blockSignals(True)
+            self.stop_date.setText(formatted)
+            self.stop_date.setCursorPosition(cursor_position + 2)  # 두 개의 '.'을 추가했으므로 커서를 2칸 앞으로 이동
+            self.stop_date.blockSignals(False)
+        elif len(numbers) == 6:  # 사용자가 6자리(YYYYMM)까지 입력했을 때
+            # YYYY.MM 형식으로 변환
+            formatted = numbers[:4] + '.' + numbers[4:]
+            cursor_position = self.stop_date.cursorPosition()
+            self.stop_date.blockSignals(True)
+            self.stop_date.setText(formatted)
+            self.stop_date.setCursorPosition(cursor_position + 1)  # 한 개의 '.'을 추가했으므로 커서를 1칸 앞으로 이동
+            self.stop_date.blockSignals(False)
+
     def update_depositor_name(self, text):
         # 성명 필드의 텍스트를 예금주 필드로 복사
         self.depositor_name.setText(text)
@@ -342,12 +375,35 @@ class HonorScreen(QWidget):
     def format_resident_number(self, text):
         # '-'가 없는 숫자 부분만 추출
         numbers = text.replace("-", "")
+        
+        # 숫자가 13자리 이상이면 잘라냄 (앞 6자리 + 뒤 7자리)
+        if len(numbers) > 13:
+            numbers = numbers[:13]
+        
         if len(numbers) > 6:
             # 앞 6자리를 추출하고 '-'를 추가
             formatted = numbers[:6] + '-' + numbers[6:]
-            # 커서 위치를 유지하며 텍스트를 설정
+             # 커서 위치를 유지하며 텍스트를 설정
             cursor_position = self.resident_number.cursorPosition()
             self.resident_number.blockSignals(True)
             self.resident_number.setText(formatted)
             self.resident_number.setCursorPosition(cursor_position + 1)
             self.resident_number.blockSignals(False)
+
+    def format_honor_number(self, text):
+        # '-'가 없는 숫자 부분만 추출
+        numbers = text.replace("-", "")
+        
+        # 숫자가 8자리 이상이면 잘라냄 (앞 2자리 + 뒤 6자리)
+        if len(numbers) > 8:
+            numbers = numbers[:8]
+        
+        if len(numbers) > 2:
+            # 앞 6자리를 추출하고 '-'를 추가
+            formatted = numbers[:2] + '-' + numbers[2:]
+             # 커서 위치를 유지하며 텍스트를 설정
+            cursor_position = self.honor_number.cursorPosition()
+            self.honor_number.blockSignals(True)
+            self.honor_number.setText(formatted)
+            self.honor_number.setCursorPosition(cursor_position + 1)
+            self.honor_number.blockSignals(False)
