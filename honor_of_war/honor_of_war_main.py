@@ -77,6 +77,8 @@ class HonorScreen(QWidget):
         if mode == 'stop':
             # 중지자 폼 필드 추가
             self.honor_number = QLineEdit()
+            self.honor_number.setPlaceholderText('XX-XXXXXX 형식으로 입력하세요.')
+            self.honor_number.textChanged.connect(self.format_honor_number)
             self.form_layout.addRow('보훈번호', self.honor_number)
 
             # 검색 버튼
@@ -173,6 +175,8 @@ class HonorScreen(QWidget):
 
         # 보훈번호
         self.honor_number = QLineEdit()
+        self.honor_number.setPlaceholderText('XX-XXXXXX 형식으로 입력하세요.')
+        self.honor_number.textChanged.connect(self.format_honor_number)
         self.form_layout.addRow('보훈번호', self.honor_number)
 
         # 성명
@@ -385,3 +389,21 @@ class HonorScreen(QWidget):
             self.resident_number.setText(formatted)
             self.resident_number.setCursorPosition(cursor_position + 1)
             self.resident_number.blockSignals(False)
+
+    def format_honor_number(self, text):
+        # '-'가 없는 숫자 부분만 추출
+        numbers = text.replace("-", "")
+        
+        # 숫자가 8자리 이상이면 잘라냄 (앞 2자리 + 뒤 6자리)
+        if len(numbers) > 8:
+            numbers = numbers[:8]
+        
+        if len(numbers) > 2:
+            # 앞 6자리를 추출하고 '-'를 추가
+            formatted = numbers[:2] + '-' + numbers[2:]
+             # 커서 위치를 유지하며 텍스트를 설정
+            cursor_position = self.honor_number.cursorPosition()
+            self.honor_number.blockSignals(True)
+            self.honor_number.setText(formatted)
+            self.honor_number.setCursorPosition(cursor_position + 1)
+            self.honor_number.blockSignals(False)
