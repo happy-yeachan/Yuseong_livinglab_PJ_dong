@@ -194,10 +194,9 @@ def new_update(screen):
         QMessageBox.Yes | QMessageBox.No, 
         QMessageBox.Yes
     )
-    if reply == QMessageBox.Yes:
-        if new_validate_form(screen):
-            update_new_Honor_of_War(screen.honor_number.text(), new_get_form_data(screen))
-            rows = get_data("Honor_of_War_New")
-            screen.load_data(rows, 'new')
-            screen.honor_number.setReadOnly(False)
-            show_message("데이터가 성공적으로 수정되었습니다.")
+    if reply == QMessageBox.Yes and new_validate_form(screen):
+        update_new_Honor_of_War(screen.honor_number.text(), new_get_form_data(screen))
+        rows = get_data("Honor_of_War_New")
+        screen.load_data(rows, 'new')
+        screen.honor_number.setReadOnly(False)
+        show_message("데이터가 성공적으로 수정되었습니다.")
