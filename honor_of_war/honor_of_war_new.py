@@ -69,6 +69,12 @@ def new_validate_form(screen):
             return False
 
     # 각 필드의 형식이 올바른지 확인
+        
+    honor_num = screen.honor_number.text().replace("-", "")
+    if not honor_num.isdigit() or len(rrn) != 8:
+        show_message("보훈번호는 8자리 숫자여야 합니다.")
+        screen.honor_number.setFocus()
+        return False
     
     rrn = screen.resident_number.text().replace("-", "")
     if not rrn.isdigit() or len(rrn) != 13:
