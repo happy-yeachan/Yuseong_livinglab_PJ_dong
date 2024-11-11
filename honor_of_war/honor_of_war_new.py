@@ -26,7 +26,10 @@ def new_submit_form(screen):
             show_message("이미 등록된 보훈번호입니다.")
         else:
             rows = get_data("Honor_of_War_New")
+            current = screen.dong_name.currentText()
             screen.load_data(rows, 'new')
+            screen.dong_name.setCurrentText(current)
+            
             show_message("데이터가 성공적으로 추가되었습니다.")
 
 def new_get_form_data(screen):
@@ -182,7 +185,9 @@ def new_delete(screen):
         delete_new_Honor_of_War(screen.honor_number.text())
         screen.honor_number.setReadOnly(False)
         rows = get_data("Honor_of_War_New")
+        current = screen.dong_name.currentText()
         screen.load_data(rows, 'new')
+        screen.dong_name.setCurrentText(current)
         show_message("데이터가 성공적으로 삭제되었습니다.")
         
 def new_update(screen):
@@ -197,6 +202,8 @@ def new_update(screen):
     if reply == QMessageBox.Yes and new_validate_form(screen):
         update_new_Honor_of_War(screen.honor_number.text(), new_get_form_data(screen))
         rows = get_data("Honor_of_War_New")
+        current = screen.dong_name.currentText()
         screen.load_data(rows, 'new')
         screen.honor_number.setReadOnly(False)
+        screen.dong_name.setCurrentText(current)
         show_message("데이터가 성공적으로 수정되었습니다.")
