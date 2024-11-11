@@ -36,7 +36,7 @@ def new_get_form_data(screen):
         screen.honor_number.text(),
         screen.name.text(),
         screen.resident_number.text(),
-        f"{screen.address.text()}({screen.detail_address.text()})",
+        f"{screen.address.text()} ({screen.detail_address.text()})",
         screen.deposit_type.currentText(),
         screen.bank_name.currentText(),
         screen.depositor_name.text(),
@@ -71,9 +71,15 @@ def new_validate_form(screen):
     # 각 필드의 형식이 올바른지 확인
         
     honor_num = screen.honor_number.text().replace("-", "")
-    if not honor_num.isdigit() or len(rrn) != 8:
+    if not honor_num.isdigit() or len(honor_num) != 8:
         show_message("보훈번호는 8자리 숫자여야 합니다.")
         screen.honor_number.setFocus()
+        return False
+    
+    date = screen.transfer_date.text().replace(".", "")
+    if not date.isdigit() or len(date) != 8:
+        show_message("날짜는 0000.00.00 형식의 숫자여야 합니다.")
+        screen.transfer_date.setFocus()
         return False
     
      # 성명 필드에 숫자가 포함되어 있는지 확인
@@ -193,5 +199,5 @@ def new_update(screen):
             update_new_Honor_of_War(screen.honor_number.text(), new_get_form_data(screen))
             rows = get_data("Honor_of_War_New")
             screen.load_data(rows, 'new')
-            screen.honor_number.setEditable(True)
+            screen.honor_number.setReadOnly(False)
             show_message("데이터가 성공적으로 수정되었습니다.")
