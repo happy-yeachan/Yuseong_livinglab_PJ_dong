@@ -36,7 +36,7 @@ def new_get_form_data(screen):
         screen.honor_number.text(),
         screen.name.text(),
         screen.resident_number.text(),
-        f"{screen.address.text()} {screen.detail_address.text()}",
+        f"{screen.address.text()} ({screen.detail_address.text()})",
         screen.deposit_type.currentText(),
         screen.bank_name.currentText(),
         screen.depositor_name.text(),
@@ -100,9 +100,9 @@ def set_form_fields_from_table(screen, row):
     screen.honor_number.setText(screen.table.item(row, 2).text())
     screen.name.setText(screen.table.item(row, 3).text())
     screen.resident_number.setText(screen.table.item(row, 4).text())
-    address_parts = screen.table.item(row, 5).text().split(' ')
-    screen.address.setText(' '.join(address_parts[0]))
-    screen.detail_address.setText(address_parts[1])
+    address_parts = screen.table.item(row, 5).text().split('(')
+    screen.address.setText(address_parts[0])
+    screen.detail_address.setText(address_parts[1][:-1])
     screen.deposit_type.setCurrentText(screen.table.item(row, 6).text())
     screen.bank_name.setCurrentText(screen.table.item(row, 7).text())
     screen.depositor_name.setText(screen.table.item(row, 8).text())
