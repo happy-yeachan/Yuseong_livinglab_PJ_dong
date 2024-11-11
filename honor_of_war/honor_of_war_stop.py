@@ -51,7 +51,7 @@ def stop_get_form_data_for_update(screen):
 def stop_validate_form(screen):
     # 필수 입력 필드가 비어 있는지 확인
     required_fields = {
-        '중단사유': screen.stop_reason.currentText(),
+        '중단사유': screen.stop_reason.text(),
         '년월일': screen.stop_date.text()
     }
 
@@ -67,6 +67,9 @@ def stop_validate_form(screen):
         show_message("날짜는 0000.00.00 형식의 숫자여야 합니다.")
         screen.stop_date.setFocus()
         return False
+    
+    # 모든 유효성 검사를 통과하면 True 반환
+    return True
 
 def show_message(message):
     QMessageBox.information(None, '정보', message)
