@@ -36,7 +36,7 @@ def new_get_form_data(screen):
         screen.honor_number.text(),
         screen.name.text(),
         screen.resident_number.text(),
-        f"{screen.address.text()} ({screen.detail_address.text()})",
+        f"{screen.address.text()}({screen.detail_address.text()})",
         screen.deposit_type.currentText(),
         screen.bank_name.currentText(),
         screen.depositor_name.text(),
@@ -101,7 +101,7 @@ def set_form_fields_from_table(screen, row):
     screen.name.setText(screen.table.item(row, 3).text())
     screen.resident_number.setText(screen.table.item(row, 4).text())
     address_parts = screen.table.item(row, 5).text().split('(')
-    screen.address.setText(address_parts[0])
+    screen.address.setText(address_parts[0][:-1])
     screen.detail_address.setText(address_parts[1][:-1])
     screen.deposit_type.setCurrentText(screen.table.item(row, 6).text())
     screen.bank_name.setCurrentText(screen.table.item(row, 7).text())
@@ -124,13 +124,14 @@ def set_focus_for_column(screen, column):
         2: screen.honor_number,
         3: screen.name,
         4: screen.resident_number,
-        5: screen.deposit_type,
-        6: screen.bank_name,
-        7: screen.depositor_name,
-        8: screen.account_number,
-        9: screen.new_reason,
-        10: screen.transfer_date,
-        11: screen.notes,
+        5: screen.address,
+        6: screen.deposit_type,
+        7: screen.bank_name,
+        8: screen.depositor_name,
+        9: screen.account_number,
+        10: screen.new_reason,
+        11: screen.transfer_date,
+        12: screen.notes
     }
     if column in focus_map:
         focus_map[column].setFocus()
