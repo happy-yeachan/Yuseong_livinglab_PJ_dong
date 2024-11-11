@@ -45,9 +45,10 @@ def export_to_excel_Now():
     export_to_excel_New(wb)
     export_to_excel_Stop(wb)
 
-    # 파일 이름 생성 (현재 날짜 기반)
+    # 파일 이름 생성 (동명 + 현재 날짜 기반)
+    dong_name = rows[0][0]  # 첫 번째 행의 첫 번째 필드에서 동명 가져오기
     current_date = datetime.datetime.now().strftime("%Y%m")
-    file_name = f"참전유공자_{current_date}.xlsx"
+    file_name = f"참전유공자_{current_date}_{dong_name}.xlsx"
 
     # 엑셀 파일 저장
     wb.save(file_name)
