@@ -34,7 +34,7 @@ def stop_get_form_data(screen):
         screen.honor_number.text(),
         screen.name.text(),
         screen.resident_number.text(),
-        f"{screen.address.text()} {screen.detail_address.text()}",
+        f"{screen.address.text()} ({screen.detail_address.text()})",
         screen.transfer_date.text(),
         screen.stop_reason.text(),
         screen.stop_date.text(),
@@ -70,9 +70,9 @@ def set_form_fields_from_table(screen, row):
     screen.honor_number.setText(screen.table.item(row, 2).text())
     screen.name.setText(screen.table.item(row, 3).text())
     screen.resident_number.setText(screen.table.item(row, 4).text())
-    address_parts = screen.table.item(row, 5).text().split(' ')
-    screen.address.setText(' '.join(address_parts[1:-1]))
-    screen.detail_address.setText(address_parts[-1])
+    address_parts = screen.table.item(row, 5).text().split('(')
+    screen.address.setText(address_parts[0][:-1])
+    screen.detail_address.setText(address_parts[1][:-1])
     screen.transfer_date.setText(screen.table.item(row, 6).text())
     screen.stop_reason.setText(screen.table.item(row, 7).text())
     screen.stop_date.setText(screen.table.item(row, 8).text())
@@ -147,9 +147,9 @@ def search_veteran(screen, honor_number):
             screen.dong_name.setText(row[0])
             screen.name.setText(row[3])
             screen.resident_number.setText(row[4])
-            address_parts = row[5].split(' ')
-            screen.address.setText(' '.join(address_parts[0]))
-            screen.detail_address.setText(address_parts[1])
+            address_parts = row[5].split('(')
+            screen.address.setText(address_parts[0][:-1])
+            screen.detail_address.setText(address_parts[1][:-1])
             screen.transfer_date.setText(row[11])
         else:
             QMessageBox.information(screen, '검색 결과 없음', '해당 보훈번호로 등록된 사용자를 찾을 수 없습니다.')
