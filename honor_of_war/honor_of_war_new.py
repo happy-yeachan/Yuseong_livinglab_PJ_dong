@@ -98,6 +98,7 @@ def new_load_selected_data(screen, row, column):
 def set_form_fields_from_table(screen, row):
     screen.dong_name.setCurrentText(screen.table.item(row, 0).text())
     screen.honor_number.setText(screen.table.item(row, 2).text())
+    screen.honor_number.setReadOnly(True)
     screen.name.setText(screen.table.item(row, 3).text())
     screen.resident_number.setText(screen.table.item(row, 4).text())
     address_parts = screen.table.item(row, 5).text().split('(')
@@ -121,7 +122,6 @@ def configure_buttons_for_edit(screen):
 def set_focus_for_column(screen, column):
     focus_map = {
         0: screen.dong_name,
-        2: screen.honor_number,
         3: screen.name,
         4: screen.resident_number,
         5: screen.address,
@@ -148,6 +148,7 @@ def new_cancel(screen):
     
     # 사용자가 'Yes'를 클릭한 경우에만 'show_new' 함수 호출
     if reply == QMessageBox.Yes:
+        screen.honor_number.setReadOnly(False)
         show_new(screen)
 
 def new_delete(screen):
@@ -161,8 +162,10 @@ def new_delete(screen):
     )
     if reply == QMessageBox.Yes:
         delete_new_Honor_of_War(screen.honor_number.text())
+        screen.honor_number.setReadOnly(False)
         rows = get_data("Honor_of_War_New")
         screen.load_data(rows, 'new')
+        show_message("데이터가 성공적으로 삭제되었습니다.")
         
 def new_update(screen):
     # 사용자에게 수정할 것인지 확인하는 메시지 박스 생성
@@ -178,4 +181,5 @@ def new_update(screen):
             update_new_Honor_of_War(screen.honor_number.text(), new_get_form_data(screen))
             rows = get_data("Honor_of_War_New")
             screen.load_data(rows, 'new')
+            screen.honor_number.setEditable(True)
             show_message("데이터가 성공적으로 수정되었습니다.")
