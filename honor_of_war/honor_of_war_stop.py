@@ -15,7 +15,7 @@ def configure_stop_table(screen):
     screen.table.setColumnCount(10)
     screen.table.setHorizontalHeaderLabels([
         '동', '등록일', '보훈번호', '성명', '주민번호', '주소',
-        '전입일', '중단사유', '사유일시', '비고'
+        '전입일', '중단사유', '년월일', '비고'
     ])
 
 def stop_submit_form(screen):
