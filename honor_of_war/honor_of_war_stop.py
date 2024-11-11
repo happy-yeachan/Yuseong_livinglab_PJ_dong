@@ -41,19 +41,32 @@ def stop_get_form_data(screen):
         screen.notes.toPlainText()
     )
 
-def stop_validate_form(screen):
-    # 데이터 확인 코드 추가 예정
-    return all([
-        screen.dong_name.text(),
-        screen.honor_number.text(),
-        screen.name.text(),
-        screen.resident_number.text(),
-        screen.address.text(),
-        screen.detail_address.text(),
-        screen.transfer_date.text(),
+def stop_get_form_data_for_update(screen):
+    return (
         screen.stop_reason.text(),
-        screen.stop_date.text()
-    ])
+        screen.stop_date.text(),
+        screen.notes.toPlainText()
+    )
+
+def stop_validate_form(screen):
+    # 필수 입력 필드가 비어 있는지 확인
+    required_fields = {
+        '중단사유': screen.stop_reason.currentText(),
+        '년월일': screen.stop_date.text()
+    }
+
+    for field, value in required_fields.items():
+        if not value:
+            show_message(f"{field} 필드를 입력해주세요.")
+            return False
+
+    # 각 필드의 형식이 올바른지 확인
+    
+    date = screen.stop_date.text().replace(".", "")
+    if not date.isdigit() or len(date) != 8:
+        show_message("날짜는 0000.00.00 형식의 숫자여야 합니다.")
+        screen.stop_date.setFocus()
+        return False
 
 def show_message(message):
     QMessageBox.information(None, '정보', message)
@@ -87,7 +100,6 @@ def configure_buttons_for_edit(screen):
 
 def set_focus_for_column(screen, column):
     focus_map = {
-        6: screen.transfer_date,
         7: screen.stop_reason,
         8: screen.stop_date,
         9: screen.notes,
@@ -133,8 +145,8 @@ def stop_update(screen):
         QMessageBox.Yes | QMessageBox.No, 
         QMessageBox.Yes
     )
-    if reply == QMessageBox.Yes:
-        #update_stop_veterans(screen.honor_number.text(), get_form_data(screen))
+    if reply == QMessageBox.Yes and stop_validate_form(screen):
+        update_stop_Honor_of_War(screen.honor_number.text(), stop_get_form_data_for_update(screen))
         rows = get_data("Honor_of_War_stop")
         screen.load_data(rows, 'stop')
         show_message("데이터가 성공적으로 수정되었습니다.")

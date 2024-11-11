@@ -167,13 +167,7 @@ def update_stop_Honor_of_War(honor_number, db):
     try:
         cursor.execute(f'''
             UPDATE Honor_of_War_Stop
-            SET Dong = ?, Registration_month = ?, Veteran = ?, Name = ?, RRN = ?, Address = ?, Deposit_Type = ?, Bank = ?, Depositor = ?, Account = ?, New_Reason = ?, Move_in = ?, Note = ?
-            WHERE Veteran = ?
-        ''', (*db, honor_number))
-        
-        cursor.execute(f'''
-            UPDATE Honor_of_War_Current
-            SET Dong = ?, Registration_month = ?, Veteran = ?, Name = ?, RRN = ?, Address = ?, Deposit_Type = ?, Bank = ?, Depositor = ?, Account = ?, New_Reason = ?, Move_in = ?, Note = ?
+            SET Reason = ?, Reason_date = ?, S_Note = ?
             WHERE Veteran = ?
         ''', (*db, honor_number))
         
