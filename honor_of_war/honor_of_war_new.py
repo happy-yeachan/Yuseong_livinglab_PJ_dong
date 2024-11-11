@@ -76,6 +76,12 @@ def new_validate_form(screen):
         screen.honor_number.setFocus()
         return False
     
+     # 성명 필드에 숫자가 포함되어 있는지 확인
+    if not screen.name.text().isalpha():
+        show_message("성명 필드는 숫자를 포함할 수 없습니다.")
+        screen.name.setFocus()
+        return False
+
     rrn = screen.resident_number.text().replace("-", "")
     if not rrn.isdigit() or len(rrn) != 13:
         show_message("주민번호는 13자리 숫자여야 합니다.")
