@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt
 from honor_of_war.honor_of_war_current import *
 from honor_of_war.honor_of_war_new import *
 from honor_of_war.honor_of_war_stop import *
+from honor_of_war.honor_of_war_data_insert import *
 
 class HonorScreen(QWidget):
     def __init__(self):
@@ -100,11 +101,7 @@ class HonorScreen(QWidget):
 
             self.address = QLineEdit()
             self.address.setReadOnly(True)
-            self.form_layout.addRow('기본 주소', self.address)
-
-            self.detail_address = QLineEdit()
-            self.detail_address.setReadOnly(True)
-            self.form_layout.addRow('상세 주소', self.detail_address)
+            self.form_layout.addRow('주소', self.address)
 
             self.transfer_date = QLineEdit()
             self.transfer_date.setReadOnly(True)
@@ -164,8 +161,11 @@ class HonorScreen(QWidget):
 
         if mode == "now":
             self.export_button = QPushButton('엑셀 추출하기')
+            self.insert_button = QPushButton('데이터 추가하기')
             self.export_button.clicked.connect(lambda: export_to_excel_Now())
+            self.insert_button.clicked.connect(lambda: select_files(self))
             self.form_layout.addRow(self.export_button)
+            self.form_layout.addRow(self.insert_button)
 
     def add_form_fields(self, mode):
         # 동명
@@ -190,10 +190,7 @@ class HonorScreen(QWidget):
         self.form_layout.addRow('주민번호', self.resident_number)
 
         self.address = QLineEdit()
-        self.form_layout.addRow('기본 주소', self.address)
-
-        self.detail_address = QLineEdit()
-        self.form_layout.addRow('상세 주소', self.detail_address)
+        self.form_layout.addRow('주소', self.address)
 
         # 입금유형
         self.deposit_type = QComboBox()
@@ -395,7 +392,7 @@ class HonorScreen(QWidget):
         numbers = text.replace("-", "")
         
         # 숫자가 8자리 이상이면 잘라냄 (앞 2자리 + 뒤 6자리)
-        if len(numbers) > 8:
+        if len(numbers) > 10:
             numbers = numbers[:8]
         
         if len(numbers) > 2:

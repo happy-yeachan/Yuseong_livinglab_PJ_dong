@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS Honor_of_War_Stop (
 
 
 def get_data(table_name):
-    cursor.execute(f'SELECT * FROM {table_name}')
+    cursor.execute(f'SELECT * FROM {table_name} ORDER BY Registration_month DESC')
     rows = cursor.fetchall()
     return rows
 
@@ -78,6 +78,21 @@ def add_new_Honor_of_War(db):
         cursor.execute(f'''
             INSERT INTO Honor_of_War_Current (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, New_Reason, Move_in, Note)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', db)
+        conn.commit()
+    except sqlite3.IntegrityError:
+        return True
+
+def add_from_file(db):
+    try:
+        print(db)
+        cursor.execute(f'''
+            INSERT INTO Honor_of_War_New (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, New_Reason, Move_in, Note)
+            VALUES (?, '2025.01.01', ?, ?, ?, ?, ?, ?, ?, ?, '전입', '0000.00.00', ?)
+        ''', db)
+        cursor.execute(f'''
+            INSERT INTO Honor_of_War_Current (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, New_Reason, Move_in, Note)
+            VALUES (?, '2025.01.01', ?, ?, ?, ?, ?, ?, ?, ?, '전입', '0000.00.00', ?)
         ''', db)
         conn.commit()
     except sqlite3.IntegrityError:
@@ -167,13 +182,7 @@ def update_stop_Honor_of_War(honor_number, db):
     try:
         cursor.execute(f'''
             UPDATE Honor_of_War_Stop
-            SET Dong = ?, Registration_month = ?, Veteran = ?, Name = ?, RRN = ?, Address = ?, Deposit_Type = ?, Bank = ?, Depositor = ?, Account = ?, New_Reason = ?, Move_in = ?, Note = ?
-            WHERE Veteran = ?
-        ''', (*db, honor_number))
-        
-        cursor.execute(f'''
-            UPDATE Honor_of_War_Current
-            SET Dong = ?, Registration_month = ?, Veteran = ?, Name = ?, RRN = ?, Address = ?, Deposit_Type = ?, Bank = ?, Depositor = ?, Account = ?, New_Reason = ?, Move_in = ?, Note = ?
+            SET Reason = ?, Reason_date = ?, S_Note = ?
             WHERE Veteran = ?
         ''', (*db, honor_number))
         

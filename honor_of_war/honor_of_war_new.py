@@ -26,7 +26,10 @@ def new_submit_form(screen):
             show_message("이미 등록된 보훈번호입니다.")
         else:
             rows = get_data("Honor_of_War_New")
+            current = screen.dong_name.currentText()
             screen.load_data(rows, 'new')
+            screen.dong_name.setCurrentText(current)
+            
             show_message("데이터가 성공적으로 추가되었습니다.")
 
 def new_get_form_data(screen):
@@ -36,7 +39,7 @@ def new_get_form_data(screen):
         screen.honor_number.text(),
         screen.name.text(),
         screen.resident_number.text(),
-        f"{screen.address.text()} {screen.detail_address.text()}",
+        screen.address.text(),
         screen.deposit_type.currentText(),
         screen.bank_name.currentText(),
         screen.depositor_name.text(),
@@ -54,7 +57,6 @@ def new_validate_form(screen):
         '성명': screen.name.text(),
         '주민번호': screen.resident_number.text(),
         '기본 주소': screen.address.text(),
-        '상세 주소': screen.detail_address.text(),
         '입금유형': screen.deposit_type.currentText(),
         '은행명': screen.bank_name.currentText(),
         '예금주': screen.depositor_name.text(),
@@ -69,7 +71,25 @@ def new_validate_form(screen):
             return False
 
     # 각 필드의 형식이 올바른지 확인
+        
+    honor_num = screen.honor_number.text().replace("-", "")
+    if not honor_num.isdigit() or len(honor_num) != 10:
+        show_message("보훈번호는 10자리 숫자여야 합니다.")
+        screen.honor_number.setFocus()
+        return False
     
+    date = screen.transfer_date.text().replace(".", "")
+    if not date.isdigit() or len(date) != 8:
+        show_message("날짜는 0000.00.00 형식의 숫자여야 합니다.")
+        screen.transfer_date.setFocus()
+        return False
+    
+     # 성명 필드에 숫자가 포함되어 있는지 확인
+    if not screen.name.text().isalpha():
+        show_message("성명 필드는 숫자를 포함할 수 없습니다.")
+        screen.name.setFocus()
+        return False
+
     rrn = screen.resident_number.text().replace("-", "")
     if not rrn.isdigit() or len(rrn) != 13:
         show_message("주민번호는 13자리 숫자여야 합니다.")
@@ -98,11 +118,10 @@ def new_load_selected_data(screen, row, column):
 def set_form_fields_from_table(screen, row):
     screen.dong_name.setCurrentText(screen.table.item(row, 0).text())
     screen.honor_number.setText(screen.table.item(row, 2).text())
+    screen.honor_number.setReadOnly(True)
     screen.name.setText(screen.table.item(row, 3).text())
     screen.resident_number.setText(screen.table.item(row, 4).text())
-    address_parts = screen.table.item(row, 5).text().split(' ')
-    screen.address.setText(' '.join(address_parts[0]))
-    screen.detail_address.setText(address_parts[1])
+    screen.address.setText(screen.table.item(row, 5).text())
     screen.deposit_type.setCurrentText(screen.table.item(row, 6).text())
     screen.bank_name.setCurrentText(screen.table.item(row, 7).text())
     screen.depositor_name.setText(screen.table.item(row, 8).text())
@@ -121,16 +140,16 @@ def configure_buttons_for_edit(screen):
 def set_focus_for_column(screen, column):
     focus_map = {
         0: screen.dong_name,
-        2: screen.honor_number,
         3: screen.name,
         4: screen.resident_number,
-        5: screen.deposit_type,
-        6: screen.bank_name,
-        7: screen.depositor_name,
-        8: screen.account_number,
-        9: screen.new_reason,
-        10: screen.transfer_date,
-        11: screen.notes,
+        5: screen.address,
+        6: screen.deposit_type,
+        7: screen.bank_name,
+        8: screen.depositor_name,
+        9: screen.account_number,
+        10: screen.new_reason,
+        11: screen.transfer_date,
+        12: screen.notes
     }
     if column in focus_map:
         focus_map[column].setFocus()
@@ -147,6 +166,7 @@ def new_cancel(screen):
     
     # 사용자가 'Yes'를 클릭한 경우에만 'show_new' 함수 호출
     if reply == QMessageBox.Yes:
+        screen.honor_number.setReadOnly(False)
         show_new(screen)
 
 def new_delete(screen):
@@ -160,8 +180,12 @@ def new_delete(screen):
     )
     if reply == QMessageBox.Yes:
         delete_new_Honor_of_War(screen.honor_number.text())
+        screen.honor_number.setReadOnly(False)
         rows = get_data("Honor_of_War_New")
+        current = screen.dong_name.currentText()
         screen.load_data(rows, 'new')
+        screen.dong_name.setCurrentText(current)
+        show_message("데이터가 성공적으로 삭제되었습니다.")
         
 def new_update(screen):
     # 사용자에게 수정할 것인지 확인하는 메시지 박스 생성
@@ -172,9 +196,11 @@ def new_update(screen):
         QMessageBox.Yes | QMessageBox.No, 
         QMessageBox.Yes
     )
-    if reply == QMessageBox.Yes:
-        if new_validate_form(screen):
-            update_new_Honor_of_War(screen.honor_number.text(), new_get_form_data(screen))
-            rows = get_data("Honor_of_War_New")
-            screen.load_data(rows, 'new')
-            show_message("데이터가 성공적으로 수정되었습니다.")
+    if reply == QMessageBox.Yes and new_validate_form(screen):
+        update_new_Honor_of_War(screen.honor_number.text(), new_get_form_data(screen))
+        rows = get_data("Honor_of_War_New")
+        current = screen.dong_name.currentText()
+        screen.load_data(rows, 'new')
+        screen.honor_number.setReadOnly(False)
+        screen.dong_name.setCurrentText(current)
+        show_message("데이터가 성공적으로 수정되었습니다.")
