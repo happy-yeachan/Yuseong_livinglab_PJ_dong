@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS Honor_of_War_Stop (
 
 
 def get_data(table_name):
-    cursor.execute(f'SELECT * FROM {table_name}')
+    cursor.execute(f'SELECT * FROM {table_name} ORDER BY Registration_month DESC')
     rows = cursor.fetchall()
     return rows
 
