@@ -157,14 +157,12 @@ def stop_update(screen):
 
 def search_veteran(screen, honor_number):
     if honor_number:
-        row = get_Honor_of_War_by_honor_number(honor_number)
+        row = get_Honor_of_War_by_honor_number(str(honor_number))
         if row:
             screen.dong_name.setText(row[0])
             screen.name.setText(row[3])
             screen.resident_number.setText(row[4])
-            address_parts = row[5].split('(')
-            screen.address.setText(address_parts[0][:-1])
-            screen.detail_address.setText(address_parts[1][:-1])
+            screen.address.setText(row[5])
             screen.transfer_date.setText(row[11])
         else:
             QMessageBox.information(screen, '검색 결과 없음', '해당 보훈번호로 등록된 사용자를 찾을 수 없습니다.')

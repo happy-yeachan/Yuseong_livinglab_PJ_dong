@@ -39,7 +39,7 @@ def new_get_form_data(screen):
         screen.honor_number.text(),
         screen.name.text(),
         screen.resident_number.text(),
-        f"{screen.address.text()} ({screen.detail_address.text()})",
+        screen.address.text(),
         screen.deposit_type.currentText(),
         screen.bank_name.currentText(),
         screen.depositor_name.text(),
@@ -57,7 +57,6 @@ def new_validate_form(screen):
         '성명': screen.name.text(),
         '주민번호': screen.resident_number.text(),
         '기본 주소': screen.address.text(),
-        '상세 주소': screen.detail_address.text(),
         '입금유형': screen.deposit_type.currentText(),
         '은행명': screen.bank_name.currentText(),
         '예금주': screen.depositor_name.text(),
@@ -74,8 +73,8 @@ def new_validate_form(screen):
     # 각 필드의 형식이 올바른지 확인
         
     honor_num = screen.honor_number.text().replace("-", "")
-    if not honor_num.isdigit() or len(honor_num) != 8:
-        show_message("보훈번호는 8자리 숫자여야 합니다.")
+    if not honor_num.isdigit() or len(honor_num) != 10:
+        show_message("보훈번호는 10자리 숫자여야 합니다.")
         screen.honor_number.setFocus()
         return False
     
@@ -122,9 +121,7 @@ def set_form_fields_from_table(screen, row):
     screen.honor_number.setReadOnly(True)
     screen.name.setText(screen.table.item(row, 3).text())
     screen.resident_number.setText(screen.table.item(row, 4).text())
-    address_parts = screen.table.item(row, 5).text().split('(')
-    screen.address.setText(address_parts[0][:-1])
-    screen.detail_address.setText(address_parts[1][:-1])
+    screen.address.setText(screen.table.item(row, 5).text())
     screen.deposit_type.setCurrentText(screen.table.item(row, 6).text())
     screen.bank_name.setCurrentText(screen.table.item(row, 7).text())
     screen.depositor_name.setText(screen.table.item(row, 8).text())
