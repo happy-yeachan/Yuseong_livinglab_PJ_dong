@@ -34,7 +34,7 @@ def insert_from_excel(self, file):
                 str(row.get("은행명", "")),
                 str(row.get("예금주", "")).strip(),
                 str(row.get("계좌번호", "")),
-                str(row.get("비고", ""))
+                str(row.get("비고", " "))
             )
 
             add_from_file(data)
