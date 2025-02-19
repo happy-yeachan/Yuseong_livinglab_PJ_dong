@@ -83,20 +83,30 @@ def add_new_Honor_of_War(db):
     except sqlite3.IntegrityError:
         return True
 
-def add_from_file(db):
+def add_from_file(data_list):
     try:
-        print(db)
-        cursor.execute(f'''
-            INSERT INTO Honor_of_War_New (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, New_Reason, Move_in, Note)
+        conn = sqlite3.connect("database.db")  # DB 연결
+        cursor = conn.cursor()
+
+        # Honor_of_War_New에 데이터 삽입
+        cursor.executemany('''
+            INSERT INTO Honor_of_War_New 
+            (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, New_Reason, Move_in, Note)
             VALUES (?, '2025.01.01', ?, ?, ?, ?, ?, ?, ?, ?, '전입', '0000.00.00', ?)
-        ''', db)
-        cursor.execute(f'''
-            INSERT INTO Honor_of_War_Current (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, New_Reason, Move_in, Note)
+        ''', data_list)
+
+        # Honor_of_War_Current에 동일한 데이터 삽입
+        cursor.executemany('''
+            INSERT INTO Honor_of_War_Current 
+            (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, New_Reason, Move_in, Note)
             VALUES (?, '2025.01.01', ?, ?, ?, ?, ?, ?, ?, ?, '전입', '0000.00.00', ?)
-        ''', db)
-        conn.commit()
+        ''', data_list)
+
+        conn.commit()  # 한 번에 커밋 (트랜잭션 최적화)
+        conn.close()  # 연결 종료
+
     except sqlite3.IntegrityError:
-        return True
+        print("데이터 삽입 중 중복 오류 발생")
 
 def delete_new_Honor_of_War(honor_number):
     try:

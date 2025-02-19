@@ -15,16 +15,14 @@ def select_files(self):
 
 
 def insert_from_excel(self, file):
-    # 엑셀 파일 데이터를 데이터베이스에 삽입
     try:
-        # 엑셀 파일 읽기
         df = pd.read_excel(file, skiprows=2, dtype=str)
+
         address_col = next((col for col in df.columns if col.startswith("주") and "주민등록번호" not in col), "주    소")
-        # 데이터프레임에서 데이터 추출 및 삽입
-        for i, (_, row) in enumerate(df.iterrows()):  # 인덱스 i 추가
-            if i == 0:  # 첫 번째 행(0번째 인덱스) 건너뛰기
-                continue
-            data = (
+        
+        # 첫 번째 행을 제외하고 데이터 리스트 생성
+        data_list = [
+            (
                 str(row.get("행정동", ""))[3:],  # '01-진잠동' → '진잠동'
                 str(row.get("보훈번호", "")),
                 str(row.get("성 명", "")).strip(),
@@ -36,9 +34,12 @@ def insert_from_excel(self, file):
                 str(row.get("계좌번호", "")),
                 str(row.get("비고", " "))
             )
+            for i, (_, row) in enumerate(df.iterrows()) if i != 0  # 첫 번째 행 제외
+        ]
 
-            add_from_file(data)
-        
+        # 데이터베이스에 일괄 삽입 (Bulk Insert)
+        add_from_file(data_list)
+
         show_current(self)
 
         print(f"'{file}'의 데이터를 성공적으로 처리했습니다.")
