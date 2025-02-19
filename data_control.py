@@ -85,7 +85,6 @@ def add_new_Honor_of_War(db):
 
 def add_from_file(db):
     try:
-        print(db)
         cursor.execute(f'''
             INSERT INTO Honor_of_War_New (Dong, Registration_month, Veteran, Name, RRN, Address, Deposit_Type, Bank, Depositor, Account, New_Reason, Move_in, Note)
             VALUES (?, '2025.01.01', ?, ?, ?, ?, ?, ?, ?, ?, '전입', '0000.00.00', ?)
